@@ -886,7 +886,6 @@ Lavoro:  <a href="https://pezzanera.it/" target="_blank" rel="noopener">pezzaner
     
     makeDraggable(w,false);
   });
-  makeDraggable($('#player'),true);
   setActive(wins[0]);
   function updateCount(){ var n=wins.filter(function(w){return !w.hidden&&!w.classList.contains('minimized')}).length; count.textContent=n+' '+T(n===1?'oggetto':'oggetti'); }
   function applyFilter(){ wins.forEach(function(w){ w.hidden=!passes(w)||taskBtn(w).classList.contains('closed'); if(w.hidden) dock(w); }); updateCount(); }
