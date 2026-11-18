@@ -215,14 +215,7 @@ a{color:inherit}
 .body p.q{font-style:italic;color:var(--win-ink-muted)}
 .meta{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;font:18px/1.15 var(--font-pixel);color:var(--win-ink)}
 .meta dt{color:var(--win-ink-muted);margin:0}.meta dd{margin:0;min-width:0}
-.actions{display:flex;flex-wrap:wrap;gap:6px}
-.status{display:flex;gap:4px;margin-top:auto;font:17px/1 var(--font-pixel);color:var(--win-ink)}
-.status>span{display:flex;align-items:center;gap:6px;padding:4px 7px;min-width:0;box-shadow:inset 1px 1px var(--win-sh),inset -1px -1px var(--win-hi)}
-.status>span:first-child{flex:1 1 auto}
-.led{width:9px;height:9px;flex:none;background:var(--win-sh)}
-.led.live{background:#19c45c;box-shadow:0 0 6px #19c45c;animation:blink 2.4s steps(2) infinite}
-.led.wip{background:#e8a100;box-shadow:0 0 6px #e8a100}
-.led.soon{background:var(--violet);box-shadow:0 0 6px var(--violet)}
+.actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
 /* le strisce scorrono come strato a parte (transform), non ridisegnando lo sfondo a ogni frame */
 @keyframes stripes{to{transform:translateX(40px)}}
 .notepad{font:13.5px/1.6 "Lucida Console","Courier New",monospace;background:#fff;color:var(--win-ink);padding:12px 14px;flex:1 1 auto;min-width:0;white-space:pre-wrap;box-shadow:inset 1px 1px var(--win-dk),inset -1px -1px var(--win-hi),inset 2px 2px var(--win-sh)}
@@ -324,7 +317,7 @@ a{color:inherit}
 /* fuori schermo le animazioni restano ferme (classe messa da un IntersectionObserver): niente lavoro per cose che non si vedono */
 .fuori,.fuori::before,.fuori::after,.fuori *,.fuori *::before,.fuori *::after{animation-play-state:paused!important}
 @media (prefers-reduced-motion:reduce){
-  .floor,.word i,.word i::before,.word i::after,.led.live,.prompt .cur,.osd .rec,.net i,.newb,.newb b,.win.active .bar,.win.active .bar::before,.hint i,.cascade .win{animation:none!important}
+  .floor,.word i,.word i::before,.word i::after,.prompt .cur,.osd .rec,.net i,.newb,.newb b,.win.active .bar,.win.active .bar::before,.hint i,.cascade .win{animation:none!important}
   .win{transition:none}
   html{scroll-behavior:auto}
 }
@@ -384,7 +377,6 @@ a{color:inherit}
             <p class="q">«I tuoi libri, finalmente in ordine.»</p>
             <dl class="meta"><dt>Stack</dt><dd>Next.js · Supabase · Vercel</dd><dt>Dal</dt><dd>2026</dd><dt>Nota</dt><dd>oggi è privata; una versione pubblica con le recensioni sta arrivando</dd></dl>
             <div class="actions"><a class="btn primary" href="https://pibreria.vercel.app" target="_blank" rel="noopener">Apri ↗</a></div>
-            <div class="status"><span><i class="led live"></i>LIVE</span><span>personale</span></div>
           </div>
         </article>
 
@@ -398,7 +390,6 @@ a{color:inherit}
             <p class="q">«niente resta. tutto conta.»</p>
             <dl class="meta"><dt>Stack</dt><dd>HTML e JS senza framework · mobile-first · Cloudflare</dd><dt>Dal</dt><dd>2026</dd></dl>
             <div class="actions"><a class="btn primary" href="https://cantkeep.com" target="_blank" rel="noopener">Apri ↗</a></div>
-            <div class="status"><span><i class="led live"></i>LIVE</span><span>personale</span></div>
           </div>
         </article>
 
@@ -411,7 +402,6 @@ a{color:inherit}
             <p class="q">«Scegli le date, paghi in un minuto. Alla camera pensiamo noi.»</p>
             <dl class="meta"><dt>Stack</dt><dd>HTML statico · Stripe · iCal · Vercel</dd><dt>Dal</dt><dd>2026</dd></dl>
             <div class="actions"><a class="btn primary" href="https://www.lamoraaffittacamere.it/" target="_blank" rel="noopener">Apri ↗</a><a class="btn" href="https://www.lamoraaffittacamere.it/prenota" target="_blank" rel="noopener">Prenota ↗</a></div>
-            <div class="status"><span><i class="led live"></i>LIVE</span><span>cliente</span></div>
           </div>
         </article>
 
@@ -423,7 +413,6 @@ a{color:inherit}
             <p>Il sito di Pezzanera Office, artigiani dell'innovazione dal 1976: gestionali Zucchetti e sistemi di cassa, reti, cybersecurity, centralini e Microsoft 365. È il sito-madre da cui partono i marchi verticali, ognuno col suo dominio. Chat di assistenza e gestione del consenso fatte su misura, senza plugin.</p>
             <dl class="meta"><dt>Stack</dt><dd>HTML statico · JS fatto in casa</dd><dt>Dal</dt><dd>2026</dd></dl>
             <div class="actions"><a class="btn primary" href="https://pezzanera.it/" target="_blank" rel="noopener">Apri ↗</a></div>
-            <div class="status"><span><i class="led live"></i>LIVE</span><span>Pezzanera</span></div>
           </div>
         </article>
 
@@ -436,7 +425,6 @@ a{color:inherit}
             <p class="q">«Senza pensieri.»</p>
             <dl class="meta"><dt>Stack</dt><dd>HTML statico · marchio Pezzanera</dd><dt>Dal</dt><dd>2026</dd></dl>
             <div class="actions"><a class="btn primary" href="https://cassazen.it/" target="_blank" rel="noopener">Apri ↗</a></div>
-            <div class="status"><span><i class="led live"></i>LIVE</span><span>Pezzanera</span></div>
           </div>
         </article>
 
@@ -449,7 +437,6 @@ a{color:inherit}
             <p class="q">«Il contante al sicuro da errori, furti e germi.»</p>
             <dl class="meta"><dt>Stack</dt><dd>HTML statico · marchio Pezzanera</dd><dt>Dal</dt><dd>2026</dd></dl>
             <div class="actions"><a class="btn primary" href="https://cassasicura.it/" target="_blank" rel="noopener">Apri ↗</a></div>
-            <div class="status"><span><i class="led live"></i>LIVE</span><span>Pezzanera</span></div>
           </div>
         </article>
 
@@ -462,7 +449,6 @@ a{color:inherit}
             <p class="q">«Il software è GIS. Tutto il resto siamo noi.»</p>
             <dl class="meta"><dt>Stack</dt><dd>HTML statico · marchio Pezzanera</dd><dt>Dal</dt><dd>2026</dd></dl>
             <div class="actions"><a class="btn primary" href="https://studioperativo.it/" target="_blank" rel="noopener">Apri ↗</a></div>
-            <div class="status"><span><i class="led live"></i>LIVE</span><span>Pezzanera</span></div>
           </div>
         </article>
 
@@ -475,7 +461,6 @@ a{color:inherit}
             <p class="q">«La rete dell&#39;azienda, fatta per non pensarci più.»</p>
             <dl class="meta"><dt>Stack</dt><dd>HTML statico · marchio Pezzanera</dd><dt>Dal</dt><dd>2026</dd></dl>
             <div class="actions"><a class="btn primary" href="https://reteveloce.it/" target="_blank" rel="noopener">Apri ↗</a></div>
-            <div class="status"><span><i class="led live"></i>LIVE</span><span>Pezzanera</span></div>
           </div>
         </article>
 
