@@ -1,6 +1,6 @@
 // Prova su Safari (WebKit): il sito su iPhone e su Mac. Sull'iPhone si aprono i link mandati su WhatsApp, e Chromium non è Safari.
 // Uso: node strumenti/controlla-safari.mjs [url]   (predefinito il sito online)
-// Controlla: nessun errore JS, sei finestre, niente scorrimento orizzontale, le immagini dei Prodotti caricate; «_» che arrotola
+// Controlla: nessun errore JS, cinque finestre, niente scorrimento orizzontale, le immagini dei Prodotti caricate; «_» che arrotola
 // la finestra e la riapre, «×» che la chiude e il riquadro che la riapre; sul Mac anche trascinamento e doppio clic che la rimette a posto.
 // Le foto restano in /tmp/safari-*.jpg. Se il browser manca: cd strumenti && npx playwright install webkit
 import { webkit, devices } from 'playwright';
@@ -37,7 +37,7 @@ async function prova(nome, opzioni, desktop) {
     schede: document.querySelectorAll('#prodotti .pcard').length,
     scena3d: !!document.querySelector('.scene.gl'),
   }));
-  esito(info.finestre === 6, `sei finestre (${info.finestre})`);
+  esito(info.finestre === 5, `cinque finestre (${info.finestre})`);
   esito(info.larghezza <= info.finestra + 1, `niente scorrimento orizzontale (pagina ${info.larghezza} px, schermo ${info.finestra} px)`);
   esito(info.schede >= 8, `Prodotti: ${info.schede} schede`);
   console.log(`  --  scena 3D ${info.scena3d ? 'accesa' : 'spenta (in prova senza schermo può restare spenta)'}`);

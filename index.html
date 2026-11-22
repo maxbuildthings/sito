@@ -158,7 +158,12 @@ a{color:inherit}
 .btn.primary{font-weight:bold}
 
 /* ---------- windows ---------- */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,400px),1fr));gap:24px}
+/* griglia: 3 colonne, 2 o 1 secondo lo spazio; l'ultima riga incompleta sta al centro invece di lasciare un buco */
+#progetti{container-type:inline-size}
+.grid{display:flex;flex-wrap:wrap;justify-content:center;gap:24px;--col:100%}
+.grid>*{flex:0 0 var(--col)}
+@container (min-width:824px){.grid{--col:calc((100% - 24px)/2)}}
+@container (min-width:1248px){.grid{--col:calc((100% - 48px)/3)}}
 .win{display:flex;flex-direction:column;min-width:0;padding:3px;background:var(--win-face);color:var(--win-ink);
   box-shadow:inset -1px -1px var(--win-dk),inset 1px 1px var(--win-hi),inset -2px -2px var(--win-sh),inset 2px 2px var(--win-lt),6px 8px 0 rgba(7,2,26,.55);
   transition:transform .15s ease,opacity .25s ease,box-shadow .2s ease;position:relative;scroll-margin-top:16px;transform-style:preserve-3d}
@@ -185,8 +190,6 @@ a{color:inherit}
 .wbtn{width:18px;height:16px;flex:none;background:var(--win-face);color:var(--win-ink);border:0;padding:0;cursor:pointer;font:bold 11px/16px var(--font-ui);text-align:center;box-shadow:inset -1px -1px var(--win-dk),inset 1px 1px var(--win-hi),inset -2px -2px var(--win-sh)}
 .wbtn:active{box-shadow:inset 1px 1px var(--win-dk),inset -1px -1px var(--win-hi)}
 .wbtn:focus-visible{outline:1px dotted var(--win-ink);outline-offset:-3px}
-.menubar{display:flex;gap:14px;padding:4px 8px;font:12px/1.4 var(--font-ui);color:var(--win-ink)}
-.menubar span:first-letter{text-decoration:underline}
 .body{display:flex;flex-direction:column;gap:12px;padding:12px 12px 10px;flex:1 1 auto;min-width:0}
 .shot{position:relative;aspect-ratio:16/9;max-width:100%;overflow:hidden;background:#0b0620;cursor:zoom-in;box-shadow:inset 1px 1px var(--win-dk),inset -1px -1px var(--win-hi),inset 2px 2px var(--win-sh);display:grid;place-items:center;--shot:var(--cyan)}
 .shot img{display:block;width:100%;height:100%;object-fit:cover;object-position:top center;max-width:100%}
@@ -213,8 +216,6 @@ a{color:inherit}
 .btn.presto{pointer-events:none;color:#6b5f86;font-style:italic}
 /* le strisce scorrono come strato a parte (transform), non ridisegnando lo sfondo a ogni frame */
 @keyframes stripes{to{transform:translateX(40px)}}
-.notepad{font:13.5px/1.6 "Lucida Console","Courier New",monospace;background:#fff;color:var(--win-ink);padding:12px 14px;flex:1 1 auto;min-width:0;white-space:pre-wrap;box-shadow:inset 1px 1px var(--win-dk),inset -1px -1px var(--win-hi),inset 2px 2px var(--win-sh)}
-.notepad a{color:var(--title-a)}
 .list{display:flex;flex-direction:column;gap:0;font-size:13px;background:#fff;box-shadow:inset 1px 1px var(--win-dk),inset -1px -1px var(--win-hi),inset 2px 2px var(--win-sh)}
 .list .row{display:grid;grid-template-columns:22px 1fr;gap:8px;padding:7px 10px;border-bottom:1px dotted #cfc6dd;align-items:start}
 .list .row:last-child{border-bottom:0}
@@ -244,6 +245,8 @@ a{color:inherit}
 .contatti h2,.pacchetti h2{font:26px/1.1 var(--font-pixel);color:var(--gold);margin:0 0 8px;letter-spacing:.04em}
 .contatti p,.pacchetti p{margin:6px 0}.contatti b,.pacchetti b{color:var(--gold)}
 .contatti .btn-mail{display:block;margin:14px 0 4px;padding:16px 12px 14px;text-align:center;font:24px/1.1 var(--font-pixel);letter-spacing:.05em;color:var(--bg-deep);background:var(--green);text-decoration:none;box-shadow:inset -2px -2px rgba(0,0,0,.35),inset 2px 2px rgba(255,255,255,.55),0 0 18px rgba(57,255,138,.5);overflow-wrap:anywhere}
+/* in fondo: «Chi sono» sopra «Hai un'idea?», nello stesso riquadro */
+.contatti hr{border:0;border-top:1px dashed var(--violet);margin:16px 0 14px}
 .contatti .btn-mail:hover,.contatti .btn-mail:focus-visible{background:var(--cyan)}
 .contatti small{display:block;color:var(--fg);opacity:.85;text-align:center;margin-top:8px;padding-bottom:4px;font-size:14px}
 .pacchetti[hidden]{display:none}
@@ -284,7 +287,6 @@ a{color:inherit}
 @media (max-width:560px){.cta .lungo{display:none}}
 
 @media (max-width:480px){
-  .grid{grid-template-columns:1fr}
   .toolbar .path{flex-basis:100%}
   .toolbar:not(.sub-folder) .path,.filters .lbl,.heroacts .lungo{display:none}
   .heroacts{gap:10px}
@@ -330,7 +332,7 @@ a{color:inherit}
         <p class="prompt"><span id="prompt">C:\&gt; maxbuildthings.exe</span><span class="cur"></span></p>
         <h1 class="word" id="word"><span class="w" data-text="MAX"><i data-text="MAX">MAX</i></span><span class="w" data-text="BUILD"><i data-text="BUILD">BUILD</i></span><span class="w" data-text="THINGS"><i data-text="THINGS">THINGS</i></span></h1>
         <p class="jp" aria-hidden="true">マックスは物を作る</p>
-        <p class="sub">Ciao, sono <b>Max</b>, developer in Umbria. Faccio <b>siti, app e strumenti su misura</b> per chi ha un'idea e la vuole fatta meglio di come l'aveva immaginata: aziende, negozi, professionisti e creativi, in Italia e nel mondo.<span class="lungo"> Di giorno sono tecnico per Pezzanera Office. Qui sotto c'è la mia scrivania: ogni finestra è un progetto!</span></p>
+        <p class="sub">Ciao, sono <b>Max</b>, developer in Umbria. Faccio <b>siti, app e strumenti su misura</b> per chi ha un'idea e la vuole fatta meglio di come l'aveva immaginata: aziende, negozi, professionisti e creativi, in Italia e nel mondo.<span class="lungo"> Qui sotto c'è la mia scrivania: ogni finestra è un progetto!</span></p>
         <div class="heroacts"><a class="hint" href="#progetti"><i>▼</i> progetti<span class="lungo"> e siti</span> <i>▼</i></a><a class="cta" href="mailto:massi.cc@proton.me?subject=Ciao%20Max%2C%20ho%20visto%20maxbuildthings">✉ <span class="lungo">ti serve un sito o un&#39;app? </span>scrivimi</a></div>
       </div>
     </header>
@@ -404,17 +406,6 @@ a{color:inherit}
           </div>
         </article>
 
-        <article class="win dragable" id="chisono" data-type="about" data-title="chi_sono.txt">
-          <div class="bar"><span class="ttl">chi_sono<i>.txt</i></span><button class="wbtn" type="button" data-act="min" aria-label="Riduci a icona">_</button><button class="wbtn" type="button" data-act="max" aria-label="Ingrandisci">□</button><button class="wbtn" type="button" data-act="close" aria-label="Chiudi">×</button></div>
-          <div class="menubar" aria-hidden="true"><span>File</span><span>Modifica</span><span>Formato</span><span>?</span></div>
-          <div class="body" style="padding-top:0">
-            <div class="notepad">Max.
-Laurea in psicologia, poi il codice: mi interessa più chi usa la cosa che la cosa.
-
-Nel tempo libero faccio app per le persone a cui voglio bene.</div>
-          </div>
-        </article>
-
       </section>
 
       <section class="prodotti" id="prodotti" aria-labelledby="prodotti-t">
@@ -433,6 +424,9 @@ Nel tempo libero faccio app per le persone a cui voglio bene.</div>
       </section>
 
       <section class="contatti" id="contatti" aria-label="Contatti">
+        <h2 id="chisono">Chi sono</h2>
+        <p>Max. Laurea in psicologia, poi il codice: mi interessa più chi usa la cosa che la cosa. Di giorno sono tecnico per Pezzanera Office. Nel tempo libero faccio app per le persone a cui voglio bene.</p>
+        <hr>
         <h2>Hai un'idea? Facciamola.</h2>
         <p>Faccio siti, web app, strumenti su misura e automazioni per aziende, negozi, professionisti e creativi, in Italia e all&#39;estero. Veloci, belli dal telefono, facili da aggiornare, senza cookie.</p>
         <p>Scrivimi due righe su cosa fai e cosa ti serve. Rispondo io, non un modulo.</p>
@@ -492,7 +486,7 @@ Nel tempo libero faccio app per le persone a cui voglio bene.</div>
     // hero
     'Ciao, sono':"Hi, I'm", ', developer in Umbria. Faccio':', a developer in Umbria, Italy. I make', 'siti, app e strumenti su misura':'custom websites, apps and tools',
     "per chi ha un'idea e la vuole fatta meglio di come l'aveva immaginata: aziende, negozi, professionisti e creativi, in Italia e nel mondo.":'for anyone with an idea who wants it built better than they pictured it: companies, shops, freelancers and creatives, in Italy and worldwide.',
-    "Di giorno sono tecnico per Pezzanera Office. Qui sotto c'è la mia scrivania: ogni finestra è un progetto!":"By day I'm a technician at Pezzanera Office. Below is my desk: every window is a project!",
+    "Qui sotto c'è la mia scrivania: ogni finestra è un progetto!":"Below is my desk: every window is a project!",
     'progetti':'projects', 'e siti':'& sites', "ti serve un sito o un'app?":'need a website or an app?', 'scrivimi':'email me',
     'mailto:massi.cc@proton.me?subject=Ciao%20Max%2C%20ho%20visto%20maxbuildthings':'mailto:massi.cc@proton.me?subject=Hi%20Max%2C%20I%20saw%20maxbuildthings',
     '★ INCASSA — IN SVILUPPO':'★ INCASSA — IN DEVELOPMENT',
@@ -556,10 +550,9 @@ Nel tempo libero faccio app per le persone a cui voglio bene.</div>
     "Trova le stampanti comande in rete e cambia loro IP, Wi-Fi e password, anche quando il tool del produttore si arrende.":"Finds kitchen printers on the network and changes their IP, Wi-Fi and password, even when the manufacturer's own tool gives up.",
     'Assistente AI per il team: risponde su clienti, ticket e procedure interne pescando dal CRM e dalla base di conoscenza.':'AI assistant for the team: answers questions about customers, tickets and internal procedures, drawing on the CRM and the knowledge base.',
     "Python · Node · Supabase · un po' di tutto":'Python · Node · Supabase · a bit of everything',
-    // chi_sono.txt
-    'Modifica':'Edit', 'Formato':'Format',
-    "Max.\nLaurea in psicologia, poi il codice: mi interessa più chi usa la cosa che la cosa.\n\nNel tempo libero faccio app per le persone a cui voglio bene.":
-      "Max.\nPsychology degree first, then code: I care more about the person using the thing than the thing itself.\n\nIn my spare time I make apps for the people I love.",
+    // Chi sono (riquadro Contatti)
+    'Max. Laurea in psicologia, poi il codice: mi interessa più chi usa la cosa che la cosa. Di giorno sono tecnico per Pezzanera Office. Nel tempo libero faccio app per le persone a cui voglio bene.':
+      "Max. Psychology degree first, then code: I care more about the person using the thing than the thing itself. By day I'm a technician at Pezzanera Office. In my spare time I make apps for the people I love.",
     // InCassa
     'In costruzione':'Under construction', 'Tavolo 7 · 2 coperti':'Table 7 · 2 guests', 'senza pepe':'no pepper', '2× Acqua 0,75':'2× Water 0,75', 'TOTALE':'TOTAL',
     '(nome provvisorio)':'(working title)',
