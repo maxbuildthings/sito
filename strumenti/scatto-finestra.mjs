@@ -5,6 +5,8 @@
 //   nome         nome del file, senza estensione → screenshot/<nome>.jpg (nella radice del progetto)
 //   selettore    (facoltativo) elemento CSS da portare al centro dello schermo prima dello scatto
 //   --attesa=ms  (facoltativo) pausa in più subito prima dello scatto, per animazioni lunghe
+//   --nascondi=testo (facoltativo) nasconde l'elemento più piccolo il cui testo comincia così
+//                (es. un nome di persona da non mettere nel portfolio); lo spazio resta
 //   --mobile     (facoltativo) vista da telefono 390×844, uscita larga 400 px, qualità 60: serve
 //                solo a controllare il rapporto, non è per le finestre
 //
@@ -125,6 +127,18 @@ try {
     await el.evaluate(e => e.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' }));
     await page.waitForTimeout(1500);
     console.log(`selettore: ${selettore} portato al centro`);
+  }
+  if (typeof opzioni.nascondi === 'string') {
+    const n = await page.evaluate((t) => {
+      t = t.toLowerCase(); let piu = null;
+      for (const el of document.body.querySelectorAll('*')) {
+        const x = (el.innerText || '').trim().toLowerCase();
+        if (x.startsWith(t) && (!piu || piu.contains(el))) piu = el;
+      }
+      if (piu) piu.style.setProperty('visibility', 'hidden', 'important');
+      return piu ? piu.tagName : null;
+    }, opzioni.nascondi);
+    console.log(n ? `nascosto: <${n.toLowerCase()}> «${opzioni.nascondi}…»` : `ATTENZIONE: «${opzioni.nascondi}» non trovato`);
   }
   if (attesaExtra) await page.waitForTimeout(attesaExtra);
 

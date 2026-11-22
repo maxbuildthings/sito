@@ -35,8 +35,8 @@ async function prova(nome, viewport, extra = {}, lingua = 'it') {
   esito(font.playfair && font.vt323, `font locali caricati: Playfair ${font.playfair}, VT323 ${font.vt323}`);
   const gl = await page.evaluate(() => { const c = document.getElementById('gl'); return { three: !!window.THREE, on: document.getElementById('scene').classList.contains('gl'), w: c ? c.width : 0, h: c ? c.height : 0 }; });
   esito(gl.three && gl.on && gl.w > 300, `scena WebGL attiva: THREE ${gl.three}, canvas ${gl.w}×${gl.h}`);
-  const lin = await page.evaluate(() => ({ lang: document.documentElement.lang, l: window.L && window.L.lingua, mancanti: window.L ? window.L.mancanti() : ['window.L assente'], nascosto: document.documentElement.classList.contains('in-traduzione'), bottone: (document.querySelector('.tray [data-lingua]') || {}).textContent }));
-  esito(lin.lang === lingua && lin.l === lingua && !lin.nascosto, `lingua: html lang="${lin.lang}", scelta "${lin.l}", bottone nel vassoio "${lin.bottone}"`);
+  const lin = await page.evaluate(() => ({ lang: document.documentElement.lang, l: window.L && window.L.lingua, mancanti: window.L ? window.L.mancanti() : ['window.L assente'], nascosto: document.documentElement.classList.contains('in-traduzione'), bottone: (document.querySelector('.lingua[data-lingua]') || {}).textContent }));
+  esito(lin.lang === lingua && lin.l === lingua && !lin.nascosto, `lingua: html lang="${lin.lang}", scelta "${lin.l}", bottone in alto a destra "${lin.bottone}"`);
   if (lingua === 'en') esito(lin.mancanti.length === 0, `testi rimasti in italiano: ${lin.mancanti.length}${lin.mancanti.length ? '\n       ' + lin.mancanti.slice(0, 8).join('\n       ') : ''}`);
   const cta = page.locator('a.cta');
   if (await cta.count()) {
@@ -46,12 +46,11 @@ async function prova(nome, viewport, extra = {}, lingua = 'it') {
     esito(/copiato|copied/.test(copiato.bottone) && copiato.testo === 'massi.cc@proton.me', `clic su "scrivimi": il bottone dice "${copiato.bottone}", appunti "${copiato.testo}"`);
     await page.screenshot({ path: `screenshot/controllo-${nome}-${lingua}-copiato.png` });
   }
-  // la griglia deve vedersi senza scorrere (regola del progetto): quanto della prima finestra sta sopra la barra in basso?
-  const griglia = await page.evaluate(() => { const w = document.querySelector('#grid .win'), tb = document.getElementById('taskbar');
-    const r = w.getBoundingClientRect(), fondo = tb.getBoundingClientRect().top; return { visibile: Math.max(0, Math.round(fondo - r.top)), fondo: Math.round(fondo) }; });
+  // la griglia deve vedersi senza scorrere (regola del progetto): quanto della prima finestra sta sopra il fondo dello schermo?
+  const griglia = await page.evaluate(() => { const r = document.querySelector('#grid .win').getBoundingClientRect(); return { visibile: Math.max(0, Math.round(innerHeight - r.top)) }; });
   esito(griglia.visibile >= 120, `prima finestra visibile senza scorrere: ${griglia.visibile} px (senza contare la barra del browser del telefono)`);
-  const barra = await page.evaluate(() => { const t = document.querySelector('.tasks'); return { serve: t.scrollWidth, c: t.clientWidth }; });
-  if (viewport.width >= 1024) esito(barra.serve <= barra.c + 1, `barra in basso: tutti i bottoni entrano (${barra.serve} px su ${barra.c})`);
+  const largo = await page.evaluate(() => ({ pagina: document.documentElement.scrollWidth, schermo: innerWidth }));
+  esito(largo.pagina <= largo.schermo + 1, `niente scorrimento orizzontale (${largo.pagina} px su ${largo.schermo})`);
   const png = await page.screenshot();
   await sharp(png).resize({ width: Math.min(1200, viewport.width * (extra.deviceScaleFactor || 1)) }).jpeg({ quality: 70 }).toFile(`screenshot/controllo-${nome}-${lingua}.jpg`);
   await ctx.close();
@@ -69,7 +68,7 @@ await prova('mobile', { width: 390, height: 844 }, { deviceScaleFactor: 2, isMob
   await ctx.addInitScript(() => { sessionStorage.setItem('booted', '1'); sessionStorage.setItem('dlg', '1'); });
   const page = await ctx.newPage();
   await page.goto(base, { waitUntil: 'networkidle' });
-  const bottone = page.locator('.tray [data-lingua]');
+  const bottone = page.locator('.lingua[data-lingua]');
   esito(await bottone.isVisible(), 'bottone IT/EN visibile sul telefono');
   await bottone.click();
   await page.waitForTimeout(200);

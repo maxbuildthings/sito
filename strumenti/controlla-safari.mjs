@@ -1,7 +1,7 @@
 // Prova su Safari (WebKit): il sito su iPhone e su Mac. Sull'iPhone si aprono i link mandati su WhatsApp, e Chromium non è Safari.
 // Uso: node strumenti/controlla-safari.mjs [url]   (predefinito il sito online)
-// Controlla: nessun errore JS, nove finestre, niente scorrimento orizzontale, le immagini dei Prodotti caricate; riduci a icona e
-// ripristino dalla barra in basso; sul Mac anche trascinamento e doppio clic che rimette la finestra al suo posto.
+// Controlla: nessun errore JS, sei finestre, niente scorrimento orizzontale, le immagini dei Prodotti caricate; «_» che arrotola
+// la finestra e la riapre, «×» che la chiude e il riquadro che la riapre; sul Mac anche trascinamento e doppio clic che la rimette a posto.
 // Le foto restano in /tmp/safari-*.jpg. Se il browser manca: cd strumenti && npx playwright install webkit
 import { webkit, devices } from 'playwright';
 
@@ -37,14 +37,17 @@ async function prova(nome, opzioni, desktop) {
     schede: document.querySelectorAll('#prodotti .pcard').length,
     scena3d: !!document.querySelector('.scene.gl'),
   }));
-  esito(info.finestre === 9, `nove finestre (${info.finestre})`);
+  esito(info.finestre === 6, `sei finestre (${info.finestre})`);
   esito(info.larghezza <= info.finestra + 1, `niente scorrimento orizzontale (pagina ${info.larghezza} px, schermo ${info.finestra} px)`);
-  esito(info.schede >= 2, `Prodotti: ${info.schede} schede`);
+  esito(info.schede >= 8, `Prodotti: ${info.schede} schede`);
   console.log(`  --  scena 3D ${info.scena3d ? 'accesa' : 'spenta (in prova senza schermo può restare spenta)'}`);
 
   // le immagini dei Prodotti si caricano tardi: si scorre fin lì e si guarda che siano arrivate
-  await page.evaluate(() => document.getElementById('prodotti').scrollIntoView({ block: 'start', behavior: 'instant' }));
-  await aspetta(1500);
+  for (let i = 0; i < info.schede; i++) {
+    await page.evaluate(i => document.querySelectorAll('#prodotti .pcard')[i].scrollIntoView({ block: 'center', behavior: 'instant' }), i);
+    await aspetta(250);
+  }
+  await aspetta(1200);
   const rotte = await page.evaluate(() => [...document.querySelectorAll('#prodotti .pcard img')].filter(i => !(i.complete && i.naturalWidth > 0)).length);
   esito(rotte === 0, `immagini dei Prodotti caricate (${rotte} mancanti)`);
   await page.screenshot({ path: `/tmp/safari-${file}-2-prodotti.jpg`, type: 'jpeg', quality: 70 });
@@ -52,16 +55,23 @@ async function prova(nome, opzioni, desktop) {
   // porta in vista la prima finestra: la barra a 130 px dal bordo alto
   await page.evaluate(() => { const b = document.querySelector('#pibreria .bar').getBoundingClientRect(); scrollBy({ top: b.top - 130, behavior: 'instant' }); });
   await aspetta(1200);
-  const stato = () => page.evaluate(() => { const w = document.getElementById('pibreria'); return { ridotta: w.classList.contains('minimized'), libera: w.classList.contains('floating') }; });
+  const stato = () => page.evaluate(() => { const w = document.getElementById('pibreria'); return { arrotolata: w.classList.contains('rolled'), chiusa: w.hidden, libera: w.classList.contains('floating') }; });
 
-  // riduci a icona e ripristino dalla barra in basso
+  // «_» arrotola la finestra sulla sua barra, un altro «_» la riapre; «×» la chiude e lascia un riquadro che la riapre
   const clic = (sel) => desktop ? page.click(sel) : page.tap(sel);
   await clic('#pibreria [data-act="min"]');
   await aspetta(700);
-  esito((await stato()).ridotta, 'riduci a icona: la finestra sparisce');
-  await clic('#tasks .btn');
+  esito((await stato()).arrotolata, '«_»: la finestra si arrotola sulla barra del titolo');
+  await clic('#pibreria [data-act="min"]');
   await aspetta(700);
-  esito(!(await stato()).ridotta, 'dalla barra in basso la finestra torna');
+  esito(!(await stato()).arrotolata, 'secondo «_»: la finestra si riapre');
+  await clic('#pibreria [data-act="close"]');
+  await aspetta(700);
+  const riquadro = await page.evaluate(() => { const p = document.querySelector('.ph.chiusa'); return p ? p.textContent.trim() : ''; });
+  esito((await stato()).chiusa && !!riquadro, `«×»: la finestra si chiude e resta il riquadro «${riquadro}»`);
+  await clic('.ph.chiusa');
+  await aspetta(700);
+  esito(!(await stato()).chiusa && !(await page.$('.ph.chiusa')), 'dal riquadro la finestra torna');
 
   if (desktop) {
     await page.evaluate(() => { const b = document.querySelector('#pibreria .bar').getBoundingClientRect(); scrollBy({ top: b.top - 130, behavior: 'instant' }); });

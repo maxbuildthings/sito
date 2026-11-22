@@ -39,7 +39,9 @@ async function registra(nome, size, telefono) {
   const sopra = id => page.evaluate(i => document.getElementById(i).getBoundingClientRect().top, id);
   if (!telefono) {
     await aspetta(4000);                                   // hero con la scena 3D
-    for (let i = 0; i < 4; i++) { await page.mouse.wheel(0, 130); await aspetta(420); } // la griglia entra
+    // la griglia entra: si scorre finché la barra della prima finestra è in alto (l'hero cambia altezza quando cambia il titolo)
+    const primaBarra = () => page.evaluate(() => document.querySelector('#grid .win .bar').getBoundingClientRect().top);
+    for (let i = 0; i < 15 && (await primaBarra()) > 160; i++) { await page.mouse.wheel(0, 130); await aspetta(420); }
     // una finestra trascinata e rimessa a posto col doppio clic, che è il bello del desktop finto: la barra della prima in vista, nella prima colonna.
     // Se non c'è nessuna barra da prendere il video non esce: così il passaggio non sparisce in silenzio (una volta era sparito).
     const b = await page.evaluate(() => { const r = [...document.querySelectorAll('#grid .win .bar')].map(e => e.getBoundingClientRect()).find(q => q.top > 10 && q.top < innerHeight - 300 && q.left < 500 && q.width > 100); return r && { x: r.x, y: r.y }; });
