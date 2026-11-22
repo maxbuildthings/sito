@@ -1,0 +1,6 @@
+/* luce: il bordo delle finestre si accende vicino al mouse (anche quelle accanto) */
+.win{--mx:-999px;--my:-999px}
+.win::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:5;padding:3px;
+  background:radial-gradient(260px circle at var(--mx) var(--my),rgba(255,95,193,1),rgba(69,240,255,.75) 35%,rgba(69,240,255,0) 70%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.modal::after{display:none}

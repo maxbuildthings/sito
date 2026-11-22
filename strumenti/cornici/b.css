@@ -1,0 +1,34 @@
+/* B · Vetro al neon: finestre scure di vetro smerigliato sopra la scena, bordo al neon, titoli pixel */
+.win,.modal{border-radius:14px;padding:0;overflow:hidden;transform-style:flat;color:#efe6ff;
+  background:linear-gradient(160deg,rgba(48,22,110,.95),rgba(14,5,40,.97));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 0 0 1px rgba(150,110,255,.55),0 30px 60px -20px rgba(0,0,0,.85)}
+@media (pointer:fine) and (min-width:900px){.win,.modal{background:linear-gradient(160deg,rgba(48,22,110,.6),rgba(14,5,40,.74));-webkit-backdrop-filter:blur(16px) saturate(1.6);backdrop-filter:blur(16px) saturate(1.6)}}
+.win.active{box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 0 0 1px var(--pink),0 0 44px rgba(255,95,193,.4),0 30px 60px -20px rgba(0,0,0,.85)}
+.win:hover{transform:translateY(-3px)}
+.bar{background:linear-gradient(90deg,rgba(43,22,128,.85),rgba(109,60,240,.75));padding:7px 8px 7px 14px;border-bottom:1px solid rgba(255,255,255,.14)}
+.wbtn{width:20px;height:20px;border-radius:50%;background:rgba(20,5,54,.45);color:#fff;font:bold 11px/20px var(--font-ui);box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+.wbtn:hover{background:var(--cyan);color:#1a1030}
+.wbtn[data-act="close"]:hover,#mClose:hover{background:var(--pink);color:#fff}
+.wbtn:active{box-shadow:inset 0 0 0 1px rgba(255,255,255,.6)}
+.body{padding:16px 16px 16px}
+.body h2{color:#fff}.body h2 small{color:#bfa9e3}
+.body p{color:#ddd1f7}.body p.q{color:#ff9ad6}
+.shot{border-radius:10px;box-shadow:0 0 0 1px var(--shot),0 0 26px -6px var(--shot)}
+.shot .zoom{border-radius:6px}
+.btn{border-radius:9px;color:#fff;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.3);transition:box-shadow .2s,background .2s}
+.btn:hover{background:rgba(69,240,255,.14);box-shadow:inset 0 0 0 1px var(--cyan),0 0 16px rgba(69,240,255,.4)}
+.btn:active,.btn[aria-pressed="true"]{padding:5px 14px 6px;background:rgba(69,240,255,.22);box-shadow:inset 0 0 0 1px var(--cyan)}
+.btn.primary{background:linear-gradient(135deg,#d4358f,#6d3cf0);box-shadow:0 0 18px rgba(255,95,193,.35)}
+.btn.primary:hover{background:linear-gradient(135deg,#ff8fd6,#8b5cff)}
+.btn.presto{color:#bfa9e3;background:transparent;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
+.btn:focus-visible{outline:1px dotted #fff}
+.toolbar.bevel-out{border-radius:14px;color:#efe6ff;background:linear-gradient(160deg,rgba(48,22,110,.86),rgba(14,5,40,.92));box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 0 0 1px rgba(150,110,255,.55),0 20px 40px -20px rgba(0,0,0,.85)}
+.toolbar .path{border-radius:9px;background:rgba(0,0,0,.35);color:#efe6ff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+.toolbar .path small,.filters .lbl{color:#bfa9e3}
+.contatti{border-radius:16px;border:1px solid transparent;padding:20px 22px;background:linear-gradient(160deg,rgba(48,22,110,.9),rgba(14,5,40,.94)) padding-box,linear-gradient(135deg,var(--pink),var(--violet) 50%,var(--cyan)) border-box;box-shadow:0 0 40px rgba(109,60,240,.35),0 30px 60px -20px rgba(0,0,0,.85)}
+.contatti .btn-mail{border-radius:11px}
+.sub{border-radius:12px}
+.cta{border-radius:10px}
+.lingua{border-radius:9px}
+.ph{border-radius:14px}
+.list,.pbar{border-radius:8px}

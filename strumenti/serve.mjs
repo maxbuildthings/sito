@@ -22,7 +22,9 @@ const tipi = {
 
 createServer((req, res) => {
   const percorso = decodeURIComponent(new URL(req.url, 'http://x').pathname);
-  for (const r of regole) if (r.re.test(percorso)) for (const h of r.headers) res.setHeader(h.key, h.value);
+  // upgrade-insecure-requests via: qui si serve in http, e Safari (anche il browser di MAX·OS sul Mac) manderebbe font e file a https://localhost, che non risponde
+  for (const r of regole) if (r.re.test(percorso)) for (const h of r.headers)
+    res.setHeader(h.key, h.key === 'Content-Security-Policy' ? h.value.replace(/;\s*upgrade-insecure-requests/, '') : h.value);
   let file = join(radice, percorso === '/' ? 'index.html' : percorso);
   const escluso = ignorati.some(i => i.endsWith('/') ? percorso.startsWith('/' + i) : percorso === '/' + i);
   if (escluso || !file.startsWith(radice + sep) || !existsSync(file) || statSync(file).isDirectory()) {

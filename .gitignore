@@ -3,3 +3,6 @@ screenshot/
 STATO.md
 promo/lancio.md
 strumenti/*.py
+
+# pagine di prova locali (strumenti/prova-cornici.mjs)
+prova-*.html
