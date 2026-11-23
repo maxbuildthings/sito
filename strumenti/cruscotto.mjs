@@ -39,7 +39,7 @@ try {
   const p = await get(SITO + 'STATO.md', 6000);
   widget.push({ tipo: 'stato', titolo: 'Controlli sul sito online', voci: [
     { nome: 'Note interne protette (STATO.md)', tono: p.stato === 404 ? 'ok' : 'male', nota: p.stato === 404 ? '404, come deve essere' : 'HTTP ' + p.stato + ': pubblicate per errore!' },
-    { nome: 'Home con tag di contatto', tono: sito && /mailto:massi\.cc@proton\.me/.test(sito.corpo) ? 'ok' : 'attenzione', nota: 'mail visibile nella pagina' },
+    { nome: 'Home con tag di contatto', tono: sito && /mailto:ciao@maxbuildthings\.com/.test(sito.corpo) ? 'ok' : 'attenzione', nota: 'mail visibile nella pagina' },
   ] });
 } catch { /* niente: il widget dopo non serve se la rete è giù */ }
 
@@ -76,7 +76,7 @@ try {
 }
 
 // 6) contatti ricevuti: il sito non ha un modulo, c'è solo la mail
-widget.push({ tipo: 'testo', titolo: 'Contatti ricevuti', md: 'Il sito non li raccoglie: il contatto è una mail a **massi.cc@proton.me** (clic su «scrivimi»). Contali nella casella; i clic non si misurano (gli eventi personalizzati di Vercel sono a pagamento).' });
+widget.push({ tipo: 'testo', titolo: 'Contatti ricevuti', md: 'Il sito non li raccoglie: il contatto è una mail a **ciao@maxbuildthings.com** (clic su «scrivimi»). Contali nella casella; i clic non si misurano (gli eventi personalizzati di Vercel sono a pagamento).' });
 
 // 7) link
 widget.push({ tipo: 'link', titolo: 'Link', voci: [

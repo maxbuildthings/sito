@@ -21,7 +21,7 @@ node strumenti/controlla.mjs    # controlla errori, domini terzi, font, scena 3D
 ```
 
 ## Contatti
-massi.cc@proton.me: rispondo io, non un modulo.
+ciao@maxbuildthings.com: rispondo io, non un modulo.
 
 ## In English
 The portfolio of Max, a developer in Umbria, Italy: a fake Windows 98 desktop with a '90s vaporwave look and one window per project. A single `index.html` with no framework and no build step, a Three.js WebGL scene (aurora sky, striped sun, neon mountains, chrome objects, bloom, a light VHS pass), draggable glass windows, Italian and English, and zero third-party requests. English version: [maxbuildthings.com/?lang=en](https://maxbuildthings.com/?lang=en).

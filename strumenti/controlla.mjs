@@ -48,7 +48,7 @@ async function prova(nome, viewport, extra = {}, lingua = 'it') {
     await cta.click({ noWaitAfter: true }).catch(() => {});
     await page.waitForTimeout(300);
     const copiato = await page.evaluate(async () => ({ bottone: document.querySelector('a.cta').textContent, testo: await navigator.clipboard.readText().catch(() => '') }));
-    esito(/copiato|copied/.test(copiato.bottone) && copiato.testo === 'massi.cc@proton.me', `clic su "scrivimi": il bottone dice "${copiato.bottone}", appunti "${copiato.testo}"`);
+    esito(/copiato|copied/.test(copiato.bottone) && copiato.testo === 'ciao@maxbuildthings.com', `clic su "scrivimi": il bottone dice "${copiato.bottone}", appunti "${copiato.testo}"`);
     await page.screenshot({ path: `screenshot/controllo-${nome}-${lingua}-copiato.png` });
   }
   // la griglia deve vedersi senza scorrere (regola del progetto): quanto della prima finestra sta sopra il fondo dello schermo?
