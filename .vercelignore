@@ -1,6 +1,6 @@
 # Su Vercel va solo la vetrina: note interne e strumenti restano nel repo, non sul sito
-STATO.md
-README.md
+# note interne in radice (STATO, README e le altre .md): nessuna serve al sito
+/*.md
 profilo-github/
 strumenti/
 screenshot/

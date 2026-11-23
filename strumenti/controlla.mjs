@@ -1,8 +1,9 @@
-// Controllo prima del deploy: errori JS, violazioni della CSP, richieste a domini terzi, font, scena WebGL, 404, copia della mail, lingua IT/EN.
+// Controllo prima del deploy: errori JS, violazioni della CSP, richieste a domini terzi, font, scena WebGL, 404, copia della mail, lingua IT/EN, firma (nessun nome dell'assistente nel pubblico).
 // Uso: node strumenti/serve.mjs &   poi   node strumenti/controlla.mjs [url]   (predefinito http://localhost:5182/)
 import { chromium } from 'playwright';
 import sharp from 'sharp';
 import { mkdirSync } from 'node:fs';
+import { controllaFirma } from './firma.mjs';
 
 const base = process.argv[2] || 'http://localhost:5182/';
 const origine = new URL(base).origin;
@@ -10,6 +11,10 @@ mkdirSync('screenshot', { recursive: true });
 const browser = await chromium.launch();
 let problemi = 0;
 const esito = (ok, testo) => { if (!ok) problemi++; console.log(ok ? '  ok ' : '  NO ', testo); };
+
+console.log('\nfirma');
+const tracce = controllaFirma();
+esito(!tracce.length, tracce.length ? `nome dell'assistente nel pubblico:\n      ${tracce.join('\n      ')}` : 'nessun nome dell\'assistente in file e commit da pubblicare');
 
 async function prova(nome, viewport, extra = {}, lingua = 'it') {
   console.log(`\n${nome} ${viewport.width}×${viewport.height} (${lingua})`);
