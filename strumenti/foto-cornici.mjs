@@ -1,5 +1,5 @@
 // Foto della prova delle cornici (strumenti/prova-cornici.mjs) in WebKit, come il browser di MAX·OS sul Mac, o in Chromium.
-// Uso: node strumenti/foto-cornici.mjs [webkit|chromium] [0|b|g]  → /tmp/pv-<motore>-<versione>-{alto,griglia,fondo,dettaglio,tel}.jpg (serve node strumenti/serve.mjs acceso)
+// Uso: node strumenti/foto-cornici.mjs [webkit|chromium] [0|b|g|a]  → /tmp/pv-<motore>-<versione>-{alto,griglia,fondo,dettaglio,tel}.jpg (serve node strumenti/serve.mjs acceso)
 import { createRequire } from 'node:module';
 const require = createRequire('/Users/max/Desktop/Progetti/MAXBUILD/strumenti/');
 const pw = require('playwright');
@@ -10,7 +10,7 @@ async function apri(viewport, mobile, dpr=1){
   await ctx.addInitScript(()=>{ sessionStorage.setItem('booted','1'); sessionStorage.setItem('dlg','1'); });
   const p = await ctx.newPage(); const err=[]; p.on('pageerror',e=>err.push(e.message));
   await p.goto('http://localhost:5182/prova-cornici.html',{waitUntil:'load'}); await p.waitForTimeout(1500);
-  await p.keyboard.press({b:'1',g:'2','0':'0'}[v]); await p.waitForTimeout(300);
+  await p.keyboard.press({b:'1',g:'2',a:'3','0':'0'}[v]); await p.waitForTimeout(300);
   return {ctx,p,err};
 }
 const scorri = (p,s,d)=>p.evaluate(([s,d])=>{const e=document.querySelector(s); scrollTo(0,e.getBoundingClientRect().top+scrollY-d);},[s,d]);
