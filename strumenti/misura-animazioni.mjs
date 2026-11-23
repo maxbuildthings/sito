@@ -14,19 +14,13 @@ const ATTESA_MS = 3500, FERMO_MS = 4000, SCROLL_MS = 4000;
 
 // nome -> selettori delle animazioni CSS del sito (index.html)
 const ANIMAZIONI = {
-  'scritta che scorre (ticker)': '.ticker-track',
-  'luccichio MAX BUILD THINGS': '.word i',
-  'glitch del titolo': '.word i::before,.word i::after,.word.glitch i::before,.word.glitch i::after',
-  'riquadro .com': '.dotcom',
+  'luccichio MAX BUILD THINGS': '.word i,.word.shine i',
+  'glitch del titolo': '.word i::before,.word i::after',
   'frecce progetti': '.hint i',
   'cursore del prompt': '.prompt .cur',
   'REC lampeggiante': '.osd .rec',
   'barra olografica finestra attiva': '.win.active .bar',
-  'led LIVE': '.led.live',
   'stella NEW!': '.newb,.newb b',
-  'pallini ReteVeloce': '.net i',
-  'nastro In costruzione': '.construction',
-  'badge BEST VIEWED': '.b88.blink',
   'pavimento CSS di riserva': '.floor',
 };
 const TUTTE = Object.values(ANIMAZIONI).join(',');

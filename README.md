@@ -8,16 +8,16 @@ Il sito vetrina di Max, developer in Umbria: un desktop finto in stile Windows 9
 
 ## Cosa c'è dentro
 - Una pagina sola (`index.html`), con CSS, JS e screenshot tutti dentro. Niente framework e niente build.
-- Una scena WebGL di oggetti cromati con bloom, fatta con Three.js r128.
-- Un player lo-fi generativo con la Web Audio API: tre tracce originali sintetizzate nel browser, e i visual che reagiscono all'audio.
-- Finestre che si trascinano, si riducono a icona e si chiudono, con la barra delle applicazioni e il menu Avvio. Ci sono anche la schermata BIOS, lo screensaver e qualche easter egg (prova il Konami code).
+- Una scena WebGL fatta con Three.js r128: cielo con l'aurora, sole a strisce, montagne al neon, oggetti cromati, bloom e un velo VHS. Scorrendo, la griglia accelera e il sole scende.
+- Finestre di vetro che si trascinano, si arrotolano e si chiudono, uno screensaver con tre modi, e tutto il sito in italiano e in inglese.
+- Una sezione Prodotti con le cose che vendo: app, libri, agende e strumenti.
 - Nessuna richiesta a domini terzi, quindi niente cookie e niente tracker: font e librerie li serve il sito stesso, e la CSP in `vercel.json` lo garantisce.
 
 ## Provarlo in locale
 ```
 cd strumenti && npm install && cd ..
 node strumenti/serve.mjs        # http://localhost:5182, con le stesse intestazioni di Vercel
-node strumenti/controlla.mjs    # controlla errori, domini terzi, font, scena 3D e 404
+node strumenti/controlla.mjs    # controlla errori, domini terzi, font, scena 3D, traduzioni e 404
 ```
 
 ## Contatti

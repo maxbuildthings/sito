@@ -6,3 +6,6 @@ strumenti/*.py
 
 # pagine di prova locali (strumenti/prova-cornici.mjs)
 prova-*.html
+# Testi per clienti e listino in bozza: privati, nell archivio officina (23/11/2026)
+promo/testi.md
+promo/pacchetti.md
