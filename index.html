@@ -327,7 +327,6 @@ a{color:inherit}
           <button class="btn" type="button" data-filter="sito" aria-pressed="false">Siti web</button>
         </div>
         <div class="path"><small>Percorso:</small> C:\MAX\PROGETTI</div>
-        <div id="count">9 oggetti</div>
       </div>
 
       <section class="grid" id="grid" aria-label="Progetti online">
@@ -491,11 +490,11 @@ a{color:inherit}
     'Chi sono':'About me',
     'IT':'EN', "Lingua: italiano. Passa all'inglese":'Language: English. Switch to Italian',
     // testi scritti dal JavaScript (L.t)
-    'oggetto':'object', 'oggetti':'objects', 'Caricamento di':'Loading', '✓ copiato':'✓ copied', '★ maxbuildthings ★ torna qui ':'★ maxbuildthings ★ come back ',
+    'Caricamento di':'Loading', '✓ copiato':'✓ copied', '★ maxbuildthings ★ torna qui ':'★ maxbuildthings ★ come back ',
     'finestra spostata · doppio clic sulla sua barra per rimetterla qui':'window moved · double-click its title bar to put it back',
     'chiusa · clic per riaprire':'closed · click to reopen', 'condividi il sito':'share this site', '✓ link copiato':'✓ link copied'
   };
-  var REGOLE=[[/^Ingrandisci (.+)$/,'Enlarge $1'],[/^(\d+) oggett[oi]$/,function(m,n){ return n+(n==='1'?' object':' objects'); }]];
+  var REGOLE=[[/^Ingrandisci (.+)$/,'Enlarge $1']];
   var ATTRIBUTI=['aria-label','alt','title','href','content'];
 
   function cerca(t){ if(EN.hasOwnProperty(t)) return EN[t]; for(var i=0;i<REGOLE.length;i++) if(REGOLE[i][0].test(t)) return t.replace(REGOLE[i][0],REGOLE[i][1]); return null; }
@@ -687,15 +686,15 @@ a{color:inherit}
   document.addEventListener('visibilitychange',function(){ if(document.hidden){ baseTitle=document.title; mq=T('★ maxbuildthings ★ torna qui '); mi=0; clearInterval(mt); mt=setInterval(function(){ mi=(mi+1)%mq.length; document.title=mq.slice(mi)+mq.slice(0,mi); },320); } else { clearInterval(mt); document.title=baseTitle; } });
 
   /* ---------- windows ---------- */
-  var wins=$$('.win[data-type]'), count=$('#count'), filter='all', active=null, zTop=20;
+  var wins=$$('.win[data-type]'), filter='all', active=null, zTop=20;
   function setActive(w){ wins.forEach(function(x){x.classList.toggle('active',x===w)}); active=w; }
   function passes(w){ var t=w.dataset.type; return filter==='all'||t===filter||t==='about'; }
   function testoChiusa(w){ return w.dataset.title+' · '+T('chiusa · clic per riaprire'); }
   function chiudi(w){ w.style.transform=''; w.classList.add('closing'); if(active===w) setActive(null);
     setTimeout(function(){ dock(w); w.hidden=true; w.classList.remove('closing'); w._chiusa=true;
-      var ph=document.createElement('button'); ph.type='button'; ph.className='ph chiusa'; ph.textContent=testoChiusa(w); ph.addEventListener('click',function(){ riapri(w); }); w._phc=ph; w.parentNode.insertBefore(ph,w); updateCount(); },reduced?0:220); }
+      var ph=document.createElement('button'); ph.type='button'; ph.className='ph chiusa'; ph.textContent=testoChiusa(w); ph.addEventListener('click',function(){ riapri(w); }); w._phc=ph; w.parentNode.insertBefore(ph,w); },reduced?0:220); }
   function riapri(w){ w._chiusa=false; if(w._phc){ w._phc.remove(); w._phc=null; } w.classList.remove('rolled'); showWin(w); setActive(w); w.scrollIntoView({block:'nearest'}); }
-  function arrotola(w){ var su=!w.classList.contains('rolled'); dock(w); w.classList.toggle('rolled',su); $('[data-act="min"]',w).setAttribute('aria-expanded',su?'false':'true'); if(su&&active===w) setActive(null); else if(!su) setActive(w); updateCount(); }
+  function arrotola(w){ var su=!w.classList.contains('rolled'); dock(w); w.classList.toggle('rolled',su); $('[data-act="min"]',w).setAttribute('aria-expanded',su?'false':'true'); if(su&&active===w) setActive(null); else if(!su) setActive(w); }
   function dock(w){ if(!w.classList.contains('floating')) return; w.classList.remove('floating'); w.style.left=w.style.top=w.style.width=w.style.zIndex=''; if(w._ph){ w._ph.remove(); w._ph=null; } }
   function undock(w,r){ var ph=document.createElement('div'); ph.className='ph'; ph.style.height=r.height+'px'; ph.textContent=T('finestra spostata · doppio clic sulla sua barra per rimetterla qui'); w._ph=ph; w.parentNode.insertBefore(ph,w); w.classList.add('floating'); w.style.width=r.width+'px'; w.style.left=r.left+'px'; w.style.top=r.top+'px'; }
   function makeDraggable(w,isFixed){ if(!fine) return; var bar=$('.bar',w);
@@ -721,12 +720,10 @@ a{color:inherit}
     makeDraggable(w,false);
   });
   setActive(wins[0]);
-  function updateCount(){ var n=wins.filter(function(w){return !w.hidden}).length; count.textContent=n+' '+T(n===1?'oggetto':'oggetti'); }
-  function applyFilter(){ wins.forEach(function(w){ w.hidden=!passes(w)||!!w._chiusa; if(w.hidden) dock(w); if(w._phc) w._phc.hidden=!passes(w); }); updateCount(); }
+  function applyFilter(){ wins.forEach(function(w){ w.hidden=!passes(w)||!!w._chiusa; if(w.hidden) dock(w); if(w._phc) w._phc.hidden=!passes(w); }); }
   function setFilter(f){ filter=f; $$('[data-filter]').forEach(function(x){x.setAttribute('aria-pressed',x.dataset.filter===f?'true':'false')}); applyFilter(); }
   $$('[data-filter]').forEach(function(btn){ btn.addEventListener('click',function(){ setFilter(btn.dataset.filter); }); });
   window.addEventListener('resize',function(){ wins.forEach(dock); });
-  updateCount();
 
   /* ---------- modal (maximize) ---------- */
   var overlay=$('#overlay'), mBody=$('#mBody'), mTitle=$('#mTitle'), lastFocus=null, loadT=null;
@@ -760,7 +757,7 @@ a{color:inherit}
 
   /* ---------- favicon, deep link ---------- */
   // cambio di lingua: i testi scritti da qui non sono nel DOM di partenza, si riscrivono
-  document.addEventListener('lingua',function(){ updateCount(); $$('.ph:not(.chiusa)').forEach(function(ph){ ph.textContent=T('finestra spostata · doppio clic sulla sua barra per rimetterla qui'); }); wins.forEach(function(w){ if(w._phc) w._phc.textContent=testoChiusa(w); }); });
+  document.addEventListener('lingua',function(){ $$('.ph:not(.chiusa)').forEach(function(ph){ ph.textContent=T('finestra spostata · doppio clic sulla sua barra per rimetterla qui'); }); wins.forEach(function(w){ if(w._phc) w._phc.textContent=testoChiusa(w); }); });
   var fav=document.getElementById('fav'); if(fav && fav.dataset.alt && !reduced){ var fr=[fav.href,fav.dataset.alt], fi=0; setInterval(function(){ fi=1-fi; fav.href=fr[fi]; },900); }
   var h=(location.hash||'').replace('#',''); if(/^(cassazen|cassasicura|studioperativo|reteveloce)$/.test(h)) h='pezzanera'; if(h){ var dw=document.getElementById(h); if(dw&&dw.classList.contains('win')){ setTimeout(function(){ dw.scrollIntoView({block:'center'}); setActive(dw); },300); } }
 })();
