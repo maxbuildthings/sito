@@ -14,7 +14,7 @@ import { mkdtempSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 
-const url = process.argv[2] || 'https://maxbuildthings.vercel.app/?lang=it&gl=forza';
+const url = process.argv[2] || 'https://maxbuildthings.com/?lang=it&gl=forza';
 const browser = await chromium.launch({ args: ['--use-angle=metal', '--enable-gpu', '--ignore-gpu-blocklist'] });
 const aspetta = ms => new Promise(r => setTimeout(r, ms));
 

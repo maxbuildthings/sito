@@ -2,7 +2,7 @@
 
 Il sito vetrina di Max, developer in Umbria: un desktop finto in stile Windows 98, con l'estetica vaporwave di fine anni '90 e una finestra per ogni progetto.
 
-**→ [maxbuildthings.vercel.app](https://maxbuildthings.vercel.app)**
+**→ [maxbuildthings.com](https://maxbuildthings.com)**
 
 ![anteprima](og.jpg)
 
@@ -24,4 +24,4 @@ node strumenti/controlla.mjs    # controlla errori, domini terzi, font, scena 3D
 massi.cc@proton.me: rispondo io, non un modulo.
 
 ## In English
-The portfolio of Max, a developer in Umbria, Italy: a fake Windows 98 desktop with a '90s vaporwave look and one window per project. A single `index.html` with no framework and no build step, a Three.js WebGL scene (aurora sky, striped sun, neon mountains, chrome objects, bloom, a light VHS pass), draggable glass windows, Italian and English, and zero third-party requests. English version: [maxbuildthings.vercel.app/?lang=en](https://maxbuildthings.vercel.app/?lang=en).
+The portfolio of Max, a developer in Umbria, Italy: a fake Windows 98 desktop with a '90s vaporwave look and one window per project. A single `index.html` with no framework and no build step, a Three.js WebGL scene (aurora sky, striped sun, neon mountains, chrome objects, bloom, a light VHS pass), draggable glass windows, Italian and English, and zero third-party requests. English version: [maxbuildthings.com/?lang=en](https://maxbuildthings.com/?lang=en).

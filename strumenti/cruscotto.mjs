@@ -3,7 +3,7 @@
 // Uso: node strumenti/cruscotto.mjs
 import { readFileSync, existsSync } from 'node:fs';
 
-const SITO = 'https://maxbuildthings.vercel.app/';
+const SITO = 'https://maxbuildthings.com/';
 const DOMINIO = 'maxbuildthings.com';
 const PANNELLO_VERCEL = 'https://vercel.com/maxcc/maxbuildthings/analytics';
 const SEARCH_CONSOLE = 'https://search.google.com/search-console?resource_id=' + encodeURIComponent(SITO);
@@ -65,7 +65,11 @@ widget.push({ tipo: 'testo', titolo: 'Search Console · pagine su Google', largh
 try {
   const d = await get('https://rdap.verisign.com/com/v1/domain/' + DOMINIO, 6000, { headers: { accept: 'application/rdap+json', 'user-agent': 'maxos-cruscotto' } });
   if (d.stato === 404) widget.push({ tipo: 'numero', titolo: 'Dominio ' + DOMINIO, valore: 'libero', tono: 'attenzione', nota: 'Non comprato (si compra per ultimo, 12,03 $/anno su Vercel)' });
-  else if (d.stato === 200) widget.push({ tipo: 'numero', titolo: 'Dominio ' + DOMINIO, valore: 'registrato', tono: 'attenzione', nota: 'Risulta registrato: tuo? Se no, qualcuno l\'ha preso' });
+  else if (d.stato === 200) {
+    const scad = (JSON.parse(d.corpo).events || []).find(e => e.eventAction === 'expiration')?.eventDate?.slice(0, 10);
+    widget.push({ tipo: 'numero', titolo: 'Dominio ' + DOMINIO, valore: 'tuo', tono: 'ok',
+      nota: 'Comprato su Vercel il 23/11/2026' + (scad ? ', scade il ' + scad.split('-').reverse().join('/') : '') + ': si rinnova da solo a 12,03 $/anno' });
+  }
   else throw new Error('HTTP ' + d.stato);
 } catch {
   widget.push({ tipo: 'numero', titolo: 'Dominio ' + DOMINIO, valore: 'non comprato', tono: 'neutro', nota: 'Da STATO.md; controllo in rete non riuscito' });

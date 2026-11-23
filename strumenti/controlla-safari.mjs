@@ -5,7 +5,7 @@
 // Le foto restano in /tmp/safari-*.jpg. Se il browser manca: cd strumenti && npx playwright install webkit
 import { webkit, devices } from 'playwright';
 
-const base = process.argv[2] || 'https://maxbuildthings.vercel.app/';
+const base = process.argv[2] || 'https://maxbuildthings.com/';
 const browser = await webkit.launch();
 const aspetta = ms => new Promise(r => setTimeout(r, ms));
 let problemi = 0;

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://maxbuildthings.vercel.app/</loc><lastmod>2026-11-23</lastmod>
-    <xhtml:link rel="alternate" hreflang="it" href="https://maxbuildthings.vercel.app/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://maxbuildthings.vercel.app/?lang=en"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://maxbuildthings.vercel.app/"/>
+    <loc>https://maxbuildthings.com/</loc><lastmod>2026-11-23</lastmod>
+    <xhtml:link rel="alternate" hreflang="it" href="https://maxbuildthings.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://maxbuildthings.com/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://maxbuildthings.com/"/>
   </url>
   <url>
-    <loc>https://maxbuildthings.vercel.app/?lang=en</loc><lastmod>2026-11-23</lastmod>
-    <xhtml:link rel="alternate" hreflang="it" href="https://maxbuildthings.vercel.app/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://maxbuildthings.vercel.app/?lang=en"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://maxbuildthings.vercel.app/"/>
+    <loc>https://maxbuildthings.com/?lang=en</loc><lastmod>2026-11-23</lastmod>
+    <xhtml:link rel="alternate" hreflang="it" href="https://maxbuildthings.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://maxbuildthings.com/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://maxbuildthings.com/"/>
   </url>
 </urlset>
