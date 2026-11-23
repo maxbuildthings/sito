@@ -19,6 +19,8 @@ async function scatta(viewport, file, scale = 1) {
   page.on('pageerror', e => errori.push(e.message));
   await page.goto(url, { waitUntil: 'networkidle' });
   await page.waitForTimeout(3500);
+  // la riga in alto si scrive una lettera alla volta: si scatta quando è ferma (stesso testo a due controlli di fila)
+  await page.waitForFunction(() => { const t = document.getElementById('prompt')?.textContent || ''; const prima = window.__riga; window.__riga = t; return t !== '' && t === prima; }, null, { polling: 600, timeout: 15000 });
   const png = await page.screenshot();
   await ctx.close();
   if (errori.length) console.log(file, 'errori JS:', errori);

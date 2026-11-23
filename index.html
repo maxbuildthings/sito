@@ -96,22 +96,15 @@ a{color:inherit}
 .crt{position:fixed;inset:0;z-index:0;pointer-events:none;background:repeating-linear-gradient(180deg,rgba(0,0,0,0) 0 2px,rgba(0,0,0,.14) 2px 3px)}
 .crt::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 60%,rgba(0,0,0,.45) 100%)}
 .bars{position:fixed;top:0;left:0;right:0;height:5px;z-index:9;pointer-events:none;background:linear-gradient(90deg,#fff 0 14%,var(--gold) 0 28%,var(--cyan) 0 42%,var(--green) 0 56%,var(--pink) 0 70%,#ff3b3b 0 84%,var(--title-a) 0)}
-.kata{position:fixed;right:max(10px,env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%);z-index:1;pointer-events:none;writing-mode:vertical-rl;
-  font:72px/1 var(--font-pixel);letter-spacing:.3em;color:transparent;-webkit-text-stroke:1px var(--pink);opacity:.4;text-shadow:0 0 18px rgba(255,95,193,.35)}
-@media (max-width:1180px){.kata{display:none}}
 
-.osd{position:fixed;z-index:0;pointer-events:none;font:18px/1 var(--font-pixel);color:#fff;letter-spacing:.08em;text-shadow:0 0 4px #000,1px 1px 0 #000}
-.osd.l{left:max(14px,env(safe-area-inset-left,0px));top:calc(12px + env(safe-area-inset-top,0px))}
-.osd.r{right:max(14px,env(safe-area-inset-right,0px));top:calc(12px + env(safe-area-inset-top,0px));font-variant-numeric:tabular-nums}
-.osd .rec{color:#ff3b3b;animation:blink 1.2s steps(2) infinite}
 
 
 /* ---------- page ---------- */
 .page{position:relative;z-index:1}
 .wrap{max-width:1360px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 40px}
-.hero{text-align:center;padding-block:34px 6px}
+.hero{text-align:center;padding-block:34px 24px}
 .herotext{margin-inline:auto}
-.prompt{font:20px/1 var(--font-pixel);color:var(--cyan);letter-spacing:.02em;margin:0 0 12px;text-shadow:0 0 8px rgba(69,240,255,.6);min-height:1em}
+.prompt{font:24px/1 var(--font-pixel);color:#fff;letter-spacing:.02em;margin:0 0 12px;text-shadow:0 0 6px rgba(69,240,255,.9),0 0 18px rgba(69,240,255,.7);min-height:1em}
 .prompt .cur{display:inline-block;width:.6em;background:var(--cyan);height:1em;vertical-align:-.12em;margin-left:2px;animation:blink 1s steps(2) infinite}
 @keyframes blink{50%{opacity:0}}
 .word{margin:0;display:flex;flex-wrap:wrap;justify-content:center;align-items:baseline;gap:.04em .22em;font:italic 800 clamp(46px,8.4vw,122px)/.95 var(--font-display);letter-spacing:-.02em}
@@ -135,7 +128,6 @@ a{color:inherit}
 .word:hover i::after{animation:glitchB .5s steps(2) infinite}
 @keyframes glitchA{0%{clip-path:inset(0 0 80% 0);transform:translate(-9px,3px)}30%{clip-path:inset(45% 0 25% 0);transform:translate(7px,-2px)}60%{clip-path:inset(70% 0 5% 0);transform:translate(-6px,1px)}100%{clip-path:inset(0 0 0 0);transform:translate(-4px,2px)}}
 @keyframes glitchB{0%{clip-path:inset(60% 0 10% 0);transform:translate(9px,-3px)}30%{clip-path:inset(10% 0 60% 0);transform:translate(-7px,2px)}60%{clip-path:inset(35% 0 40% 0);transform:translate(6px,-1px)}100%{clip-path:inset(0 0 0 0);transform:translate(4px,-2px)}}
-.jp{margin:10px 0 0;font:17px/1.3 var(--font-pixel);color:var(--cyan);letter-spacing:.3em;text-shadow:0 0 4px #07021a,0 0 10px #07021a,0 0 8px rgba(69,240,255,.6)}
 /* il bagliore e' gia' disegnato in uno strato: si anima solo la sua opacita' */
 .sub{max-width:46em;margin:14px auto 0;padding:8px 14px;background:rgba(7,2,26,.62);color:var(--fg);font-size:14px;line-height:1.55;text-shadow:0 1px 0 var(--bg-deep),0 0 14px var(--bg-deep),0 0 30px var(--bg-deep)}
 .sub b{color:var(--gold);font-weight:700}
@@ -148,11 +140,6 @@ a{color:inherit}
 
 /* ---------- OS chrome ---------- */
 .bevel-out{box-shadow:inset -1px -1px var(--win-dk),inset 1px 1px var(--win-hi),inset -2px -2px var(--win-sh),inset 2px 2px var(--win-lt)}
-.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;border-radius:8px;background:var(--win-face);color:var(--win-ink);padding:8px 10px;margin-bottom:18px;font:19px/1 var(--font-pixel)}
-.toolbar .path{flex:1 1 auto;min-width:0;padding:4px 8px;background:#fff;color:var(--win-ink);box-shadow:inset 1px 1px var(--win-dk),inset -1px -1px var(--win-hi),inset 2px 2px var(--win-sh);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.toolbar .path small{color:var(--win-ink-muted);font-size:inherit}
-.filters{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
-.filters .lbl{margin-right:4px;color:var(--win-ink-muted)}
 .btn{font:19px/1 var(--font-pixel);border-radius:4px;background:var(--win-face);color:var(--win-ink);padding:5px 14px 6px;border:0;cursor:pointer;text-decoration:none;display:inline-block;white-space:nowrap;box-shadow:inset -1px -1px var(--win-dk),inset 1px 1px var(--win-hi),inset -2px -2px var(--win-sh),inset 2px 2px var(--win-lt)}
 .btn:active,.btn[aria-pressed="true"]{box-shadow:inset 1px 1px var(--win-dk),inset -1px -1px var(--win-hi),inset 2px 2px var(--win-sh);background:repeating-conic-gradient(var(--win-face) 0 25%,#ece6f6 0 50%) 0 0/4px 4px;padding:6px 13px 5px 15px}
 .btn:disabled{color:var(--win-sh);text-shadow:1px 1px 0 var(--win-hi);cursor:default}
@@ -170,7 +157,7 @@ a{color:inherit}
   box-shadow:inset -1px -1px var(--win-dk),inset 1px 1px var(--win-hi),inset -2px -2px var(--win-sh),inset 2px 2px var(--win-lt),6px 8px 0 rgba(7,2,26,.55);
   transition:transform .15s ease,opacity .25s ease,box-shadow .2s ease;position:relative;scroll-margin-top:16px}
 /* sul computer le finestre sono di vetro smerigliato nello stesso grigio: la scena si intravede sfocata dietro (dal 23/11) */
-@media (pointer:fine){.win,.toolbar{background:rgba(217,212,228,.84);-webkit-backdrop-filter:blur(14px) saturate(0);backdrop-filter:blur(14px) saturate(0)}}
+@media (pointer:fine){.win{background:rgba(217,212,228,.84);-webkit-backdrop-filter:blur(14px) saturate(0);backdrop-filter:blur(14px) saturate(0)}}
 .win:hover{transform:translate(-1px,-1px)}
 .win.active{box-shadow:inset -1px -1px var(--win-dk),inset 1px 1px var(--win-hi),inset -2px -2px var(--win-sh),inset 2px 2px var(--win-lt),6px 8px 0 rgba(7,2,26,.55),0 0 0 1px var(--pink),0 0 26px rgba(255,95,193,.35)}
 .win.closing{opacity:0;transform:scale(.96)!important}
@@ -201,10 +188,6 @@ a{color:inherit}
 #cantkeep .shot img.phone{width:100%;object-fit:cover;box-shadow:none}
 .shot.phonebg{background:linear-gradient(135deg,#0b0620,#1e0a4a 60%,#3b0f5c)}
 .shot .zoom{position:absolute;right:6px;top:6px;font:15px/1 var(--font-pixel);color:#fff;background:rgba(7,2,26,.7);padding:3px 6px;border:1px solid rgba(255,255,255,.3);pointer-events:none}
-.newb{position:absolute;right:8px;top:28px;z-index:3;width:56px;height:56px;display:grid;place-items:center;pointer-events:none;font:bold 13px/1 var(--font-ui);color:#111;background:#ffd000;
-  clip-path:polygon(50% 0,61% 20%,82% 10%,80% 32%,100% 40%,85% 55%,98% 75%,76% 76%,70% 100%,50% 85%,30% 100%,24% 76%,2% 75%,15% 55%,0 40%,20% 32%,18% 10%,39% 20%);animation:spin 8s linear infinite}
-.newb b{animation:spinback 8s linear infinite;display:block}
-@keyframes spin{to{transform:rotate(360deg)}}@keyframes spinback{to{transform:rotate(-360deg)}}
 .body h2{font:bold 15px/1.3 var(--font-ui);margin:0}
 .body p{margin:0;font-size:13.5px;line-height:1.55}
 .body p.q{font-style:italic;color:var(--win-ink-muted)}
@@ -245,7 +228,6 @@ a{color:inherit}
 .lingua{position:fixed;z-index:30;top:calc(8px + env(safe-area-inset-top,0px));right:max(12px,env(safe-area-inset-right,0px));font:18px/1 var(--font-pixel);letter-spacing:.04em;background:var(--title-a);color:#fff;border:0;padding:5px 8px 4px;cursor:pointer;box-shadow:inset -1px -1px rgba(0,0,0,.45),inset 1px 1px rgba(255,255,255,.4),0 0 14px rgba(109,60,240,.6)}
 .lingua::after{content:"";position:absolute;inset:-10px -8px}   /* sul telefono il dito trova un bersaglio piu' grande del bottone */
 .lingua:hover,.lingua:focus-visible{background:var(--pink);outline:0}
-.osd.r{right:calc(max(12px,env(safe-area-inset-right,0px)) + 50px)}
 /* finestre: "_" la arrotola sulla barra del titolo, "×" la chiude e lascia un riquadro per riaprirla */
 .win.rolled{align-self:start}
 .win.rolled>:not(.bar){display:none}
@@ -261,27 +243,23 @@ a{color:inherit}
 .modal .shot img{height:auto;max-height:60vh;object-fit:contain;object-position:top center}
 .modal .shot img.phone{max-height:60vh}
 .modal p{font-size:14px}
-.modal .newb{display:none}
 
 
 #saver{position:fixed;inset:0;z-index:80;background:#000;width:100%;height:100%;cursor:none}
 @media (max-width:560px){.cta .lungo{display:none}}
 
 @media (max-width:480px){
-  .toolbar .path{flex-basis:100%}
-  .toolbar:not(.sub-folder) .path,.filters .lbl,.heroacts .lungo{display:none}
+  .heroacts .lungo{display:none}
   .heroacts{gap:10px}
   .hint{background:rgba(20,5,54,.72);padding:8px 10px 7px;box-shadow:inset 0 0 0 2px var(--green),0 0 12px rgba(57,255,138,.35)}
   .sub .lungo{display:none}
-  .osd{font-size:15px}
-  .jp{letter-spacing:.15em;font-size:16px}
   .word .w::before{text-shadow:1px 1px #2b1680,2px 2px #2b1680,3px 3px #2b1680,4px 4px #2b1680,7px 7px 12px rgba(0,0,0,.7)}
 }
-@media (max-width:480px) and (max-height:700px){.jp{display:none}.word{font-size:40px}}
+@media (max-width:480px) and (max-height:700px){.word{font-size:40px}}
 /* fuori schermo le animazioni restano ferme (classe messa da un IntersectionObserver): niente lavoro per cose che non si vedono */
 .fuori,.fuori::before,.fuori::after,.fuori *,.fuori *::before,.fuori *::after{animation-play-state:paused!important}
 @media (prefers-reduced-motion:reduce){
-  .floor,.word i,.word i::before,.word i::after,.prompt .cur,.osd .rec,.newb,.newb b,.win.active .bar,.win.active .bar::before,.hint i,.cascade .win{animation:none!important}
+  .floor,.word i,.word i::before,.word i::after,.prompt .cur,.win.active .bar,.win.active .bar::before,.hint i,.cascade .win{animation:none!important}
   .win{transition:none}
   html{scroll-behavior:auto}
 }
@@ -301,33 +279,20 @@ a{color:inherit}
 </div>
 <div class="crt" aria-hidden="true"></div>
 <div class="bars" aria-hidden="true"></div>
-<div class="kata" aria-hidden="true">マックスは物を作る</div>
-<div class="osd l" aria-hidden="true"><span class="rec">●</span> REC</div>
-<div class="osd r" aria-hidden="true">SP ▶ <span id="tc">00:00:00</span></div>
 
 <div class="page" id="page">
   <div class="wrap">
 
     <header class="hero">
       <div class="herotext">
-        <p class="prompt"><span id="prompt">C:\&gt; maxbuildthings.exe</span><span class="cur"></span></p>
+        <p class="prompt"><span id="prompt">maxbuildthings.com</span><span class="cur"></span></p>
         <h1 class="word" id="word"><span class="w" data-text="MAX"><i data-text="MAX">MAX</i></span><span class="w" data-text="BUILD"><i data-text="BUILD">BUILD</i></span><span class="w" data-text="THINGS"><i data-text="THINGS">THINGS</i></span></h1>
-        <p class="jp" aria-hidden="true">マックスは物を作る</p>
         <p class="sub">Ciao, sono <b>Max</b>, developer in Umbria. Faccio <b>siti, app e strumenti su misura</b> per aziende, negozi e professionisti, in Italia e nel mondo.<span class="lungo"> Qui sotto c'è la mia scrivania: ogni finestra è un progetto!</span></p>
         <div class="heroacts"><a class="hint" href="#progetti"><i>▼</i> progetti<span class="lungo"> e siti</span> <i>▼</i></a><a class="cta" href="mailto:massi.cc@proton.me?subject=Ciao%20Max%2C%20ho%20visto%20maxbuildthings">✉ <span class="lungo">ti serve un sito o un&#39;app? </span>scrivimi</a></div>
       </div>
     </header>
 
     <main id="progetti">
-      <div class="toolbar bevel-out" role="toolbar" aria-label="Filtri">
-        <div class="filters">
-          <span class="lbl">Visualizza:</span>
-          <button class="btn" type="button" data-filter="all" aria-pressed="true">Tutto</button>
-          <button class="btn" type="button" data-filter="app" aria-pressed="false">App e software</button>
-          <button class="btn" type="button" data-filter="sito" aria-pressed="false">Siti web</button>
-        </div>
-        <div class="path"><small>Percorso:</small> C:\MAX\PROGETTI</div>
-      </div>
 
       <section class="grid" id="grid" aria-label="Progetti online">
 
@@ -343,7 +308,6 @@ a{color:inherit}
         </article>
 
         <article class="win dragable" id="cantkeep" data-type="app" data-title="cantkeep.com">
-          <span class="newb" aria-hidden="true"><b>NEW!</b></span>
           <div class="bar"><span class="ttl">cantkeep<i>.com</i></span><button class="wbtn" type="button" data-act="min" aria-label="Riduci a icona">_</button><button class="wbtn" type="button" data-act="max" aria-label="Ingrandisci">□</button><button class="wbtn" type="button" data-act="close" aria-label="Chiudi">×</button></div>
           <div class="body">
             <div class="shot phonebg" style="--shot:var(--pink)" data-act="max" role="button" tabindex="0" aria-label="Ingrandisci cantkeep"><img class="phone" width="420" height="909" src="data:image/jpeg;base64,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xUiu0RUFl6HIBqI4uYhJHjJ5HwPkaVu715dP3pGKr1IBIH7+iJ8L7x0nlnzpGY4zhQTSk4GTgdBUUmvGdOk5x+1Akk4AAyaUqw6gjB/H8jX6WH7B7P6Rvv8AxxkAgmreWeC8SN7do1LgqVq4V7qDhQOQdeg6gQOfy1d3wupb8i5ntkEk2Ao0BqNxZyw8LEtxLJbqZ38NaJ85p7uVvW5kWW7AErJiv19nXzR/YKuJWhdLaSQkkqZNdQSIPU7hcsCBkyUJPUpbaAhUXKSu3/V11p7BblwmnpU59TljjSSH+hw8NGRHe9nW5eEZfK+4ppFS7/5eEtwoHSer2QXUl3PE839bJGQQpNCWOdBCVNugeVEf32QGo71pR2oFzcxhGlj/AB/I1+lh+wez+kb7/wAhf3EUR6okhAqZ17ZdMmGPfBOcN51dzQMwwTGxXNXcwuc5Moc6/wCau5pRrL4dyw1EYzUziJ2VmQHull6EipXkkb3nc5Jq6l7BXDrFqOkMPECuIXMgMZjIaQnKHwq+uIoX95EkIU+i6m9YGMS6zrGBjrV3NCX94xuVzVxIGmUrKdRy4bqG86lcxRsWRM91WbqQKvJhc/3g51/zVxLNJjGqRixx+P5Gv0sP2D2QdGh4vh6ks5CqB4luQrrHEibQB7K5R/EdVI6MKg9bi8Hirg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srg13srhFyPqw0iijXC84o15iP44QKcU4pxTinFOKcU4pxTinFOKcU4pxTinFOKcU4pxTinFOKcU4pxTinFOKcU4pxTinFOKcU4pxTinFOKcU4px7fU118/h3u+I9r5Ph/ka8h7Pyf7/kFbX2Ha6vDGcUrazCZdXhgHFEZ8vQw6461AVMblU1MMPy68ulRmNiO8hOSp8qNEcutEZFGiDiiM+VMKIz5UQM9PyHka8h7Pyf7/kLowMLHJYKGyNdXJuJf+GylCUC+PIYFOPXy0ZEmrMjyluamsiQQkjFMmt7mHOlslx5tUbyCXigjCh9GSR4t5VDbwhrTU0UDllBDUQBrmGT5laYECCEZFJoeZykrZOXBTJ1USM3sA/k1EIxLYTMUHQuh5GnHr5ZCJNWZGlLc1qIPoiiwD4EoaB9ZkuIg8uSWYNkEGobZ2jmZdU0xRokA5FRUqyP2Qy6nIb6j8fyNeQ9n5P8Af8hGva6NGvHPT1xUa9qE0a8c9PXFWsQm+cKM0wVipAJGQD+1R2USRTCVjAhDSsvTNQRlZm1SAj328zVtHGQpUFRg4NQpImc4YZq1iCSKFdQvJgvQGo1JiOYyR7pxjlUauAwYAjOCvQ0imRVKh/EA9RVrEJvn0jNRqHkADnHNgOQzUCaIiDGuOSkdCKtYpHHRmXJ/IeRryHs+K4+H+VeA9pSfqKVtppW2mlbaaVtppW2mlbaaVtppW2mlbaaVtppW2mlbaaVtppW2mlbaaVtppW2mlbaaVtppW2mlbaaVtppW2mlbaaVtppW2mlbaaVtppW2mlbaaVtppW2mlbaaVtppW2mlbaaVtppW2mlbaaVtppW2mlbaaVtppW2mlb+K5AdB/rHPeSJiKu5idJ1iR9Yl7ueQPQ/tUUZFzC7xKhOoFV1hST508AkXR3SsiFS/gykZNKA0cpQkKVzyBBw3Mda7GJ0jZuyfWjJpOOZIwR9RSI0glgVSVeNSJjjo1LC0wuIY88whEwJBoJrjudLMpKqQYi4NLG+LV5kKq4XKkDGW69eopICII0lbGrvK/gPqKSPsLebsnBzrboCR/NBNcrMAz5KgIMnkK98z3gOGOBo08hRVoYoI2VMHOXJFKDoAIkCOinPhh/EUjLpfTz/q+o+lFn0JKx8zpY0gwYtYZUdQp+U6+tJGYrbSMc9TM4GKjVn1xJG+h40JkOOYbypITN20UaMMhT2iltRFEBoriRZNGdLgRFxUY0SxlwQjjR4gEtyOfzwBBGCDSMSoITU7MEB8FB6VGfcZACxIVW6hQegNByTo7xkYuNHu4YnIxSka31NkliW6ZJNRswKFMM7MFUnJC5PKs5eWJpGd2YsIznqazj1lJpCzEs2kfNSE4dnyxLEsw0kknrypHOYjF3nZsIf6Rk0me1jWN+Z5qvQUh1FgxGo6Sy9CV6Eigcq2pWUlWU+YIqPBQuRzJ5ye9/OKTJePs2GThl8iK1ktjJdy55dBlvQJMd7umRyne690nFB86dI1OzYXyGScCowRNjtAfHAxQ1M+nnMzv7vTnnIoKe1kR8Izd0oMAhjzzSc0dnBJJJZhgkk9aDDClVBdiFB8FB6f4v//EACkRAAIBAgMHBAMAAAAAAAAAAAECEQAhAwQSEyIxQEFSkRUyUGCBkqD/2gAIAQIBAT8A+8bTKd58itplO8+RRKEyhleZ9PyHev6msTI5JY0hW/BFIiooVRAHMx8vpMTQcMSADbrTYZUCWEkAx1vegQeYLSoEcKTD0uzbtyel6xMXWqjesAPdawjhQAH8gH//xAAoEQACAAQEBAcAAAAAAAAAAAABAgADERIhQEGRBBMxUjJQU2BhcaD/2gAIAQMBAT8A98Wcf2y9jFnH9svYwomBRzKXa0zPOmesdoM+aOk0mGZmNWNTmQtNT5uHUtbrBWgGIgikK4Y0xzCy7XZgfF1hnqoGOHzhBaohEC/f5AP/2Q==" alt="cantkeep su telefono: logo, la frase 'niente resta. tutto conta.' e i bottoni per creare il proprio nome o entrare"><span class="zoom">⤢</span></div>
@@ -462,8 +426,7 @@ a{color:inherit}
     'un tocco: si apre la posta, con un testo già pronto da completare':'one tap: your mail app opens with a ready-made text to complete',
     'mailto:massi.cc@proton.me?subject=Vorrei%20un%20sito%20o%20un%27app&body=Ciao%20Max%2C%20mi%20chiamo%20...%20e%20ho%20...%20(attivit%C3%A0).%20Mi%20serve%20...':'mailto:massi.cc@proton.me?subject=I%20need%20a%20website%20or%20an%20app&body=Hi%20Max%2C%20my%20name%20is%20...%20and%20I%20run%20...%20(my%20business).%20I%20need%20...',
     // barra dei filtri e cartelle
-    'Filtri':'Filters', 'Visualizza:':'View:', 'Tutto':'All', 'App e software':'Apps & software', 'Siti web':'Websites', 'Percorso:':'Address:',
-    'C:\\MAX\\PROGETTI':'C:\\MAX\\PROJECTS', 'Progetti online':'Live projects',
+    'Progetti online':'Live projects',
     // finestre: parti comuni
     'Riduci a icona':'Minimize', 'Ingrandisci':'Maximize', 'Chiudi':'Close', 'Apri ↗':'Open ↗', 'Prenota ↗':'Book ↗',
     // Pibreria
@@ -554,7 +517,7 @@ a{color:inherit}
   if(!seen){ try{ sessionStorage.setItem('booted','1'); }catch(e){} cascade(); }
 
   var typed=false;
-  function typePrompt(){ if(typed||reduced) return; typed=true; var el=$('#prompt'), full='C:\\> maxbuildthings.exe', i=0; el.textContent=''; (function tk(){ el.textContent=full.slice(0,++i); if(i<full.length) setTimeout(tk,45); })(); }
+  function typePrompt(){ if(typed||reduced) return; typed=true; var el=$('#prompt'), full='maxbuildthings.com', i=0; el.textContent=''; (function tk(){ el.textContent=full.slice(0,++i); if(i<full.length) setTimeout(tk,45); })(); }
   typePrompt();
   /* ---------- animazioni fuori schermo in pausa ---------- */
   // le animazioni CSS infinite fuori dalla vista non devono costare niente: .fuori le mette in pausa (vedi CSS)
@@ -679,16 +642,13 @@ a{color:inherit}
   var daiScena=function(){ setTimeout(avviaScena,600); };
   if(document.readyState==='complete') daiScena(); else window.addEventListener('load',daiScena);
 
-  /* ---------- camcorder timecode, title marquee ---------- */
-  var tc=$('#tc'), t0=Date.now();
-  setInterval(function(){ var s=Math.floor((Date.now()-t0)/1000); tc.textContent=('0'+Math.floor(s/3600)).slice(-2)+':'+('0'+Math.floor(s%3600/60)).slice(-2)+':'+('0'+s%60).slice(-2); },1000);
+  /* ---------- titolo che scorre quando la scheda è nascosta ---------- */
   var baseTitle=document.title, mq='', mi=0, mt=null;
   document.addEventListener('visibilitychange',function(){ if(document.hidden){ baseTitle=document.title; mq=T('★ maxbuildthings ★ torna qui '); mi=0; clearInterval(mt); mt=setInterval(function(){ mi=(mi+1)%mq.length; document.title=mq.slice(mi)+mq.slice(0,mi); },320); } else { clearInterval(mt); document.title=baseTitle; } });
 
   /* ---------- windows ---------- */
-  var wins=$$('.win[data-type]'), filter='all', active=null, zTop=20;
+  var wins=$$('.win[data-type]'), active=null, zTop=20;
   function setActive(w){ wins.forEach(function(x){x.classList.toggle('active',x===w)}); active=w; }
-  function passes(w){ var t=w.dataset.type; return filter==='all'||t===filter||t==='about'; }
   function testoChiusa(w){ return w.dataset.title+' · '+T('chiusa · clic per riaprire'); }
   function chiudi(w){ w.style.transform=''; w.classList.add('closing'); if(active===w) setActive(null);
     setTimeout(function(){ dock(w); w.hidden=true; w.classList.remove('closing'); w._chiusa=true;
@@ -705,7 +665,7 @@ a{color:inherit}
       function up(){ w.classList.remove('dragging'); w.style.transform=''; document.removeEventListener('pointermove',mv); document.removeEventListener('pointerup',up); }
       document.addEventListener('pointermove',mv); document.addEventListener('pointerup',up); });
     if(!isFixed) bar.addEventListener('dblclick',function(e){ if(e.target.closest('.wbtn')) return; dock(w); w.scrollIntoView({block:'center'}); }); }
-  function showWin(w){ w.hidden=false; if(!passes(w)) setFilter('all'); else applyFilter(); if(!reduced){ w.classList.add('restoring'); setTimeout(function(){w.classList.remove('restoring')},300); } }
+  function showWin(w){ w.hidden=false; applicaChiuse(); if(!reduced){ w.classList.add('restoring'); setTimeout(function(){w.classList.remove('restoring')},300); } }
   wins.forEach(function(w){
     w.addEventListener('mousedown',function(){ setActive(w); if(w.classList.contains('floating')) w.style.zIndex=++zTop; });
     w.addEventListener('focusin',function(){ setActive(w); });
@@ -720,9 +680,7 @@ a{color:inherit}
     makeDraggable(w,false);
   });
   setActive(wins[0]);
-  function applyFilter(){ wins.forEach(function(w){ w.hidden=!passes(w)||!!w._chiusa; if(w.hidden) dock(w); if(w._phc) w._phc.hidden=!passes(w); }); }
-  function setFilter(f){ filter=f; $$('[data-filter]').forEach(function(x){x.setAttribute('aria-pressed',x.dataset.filter===f?'true':'false')}); applyFilter(); }
-  $$('[data-filter]').forEach(function(btn){ btn.addEventListener('click',function(){ setFilter(btn.dataset.filter); }); });
+  function applicaChiuse(){ wins.forEach(function(w){ w.hidden=!!w._chiusa; if(w.hidden) dock(w); if(w._phc) w._phc.hidden=false; }); }
   window.addEventListener('resize',function(){ wins.forEach(dock); });
 
   /* ---------- modal (maximize) ---------- */
