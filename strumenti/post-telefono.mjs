@@ -3,7 +3,8 @@
 //   fa: telefono.jpg (un telefono grande), titolo.jpg (il titolo sopra, il telefono sotto), tre.jpg (tre telefoni: sito, finestre, contatti),
 //   computer.jpg (il portatile col sito da computer e il telefono davanti), lavori.jpg (le cinque finestre e una sesta «in cantiere», due per riga),
 //   finestre.jpg (il telefono al centro e quattro lavori ai lati),
-//   zoom-*.jpg («Col titolo» col telefono più grande che esce in basso, a tre altezze: ancora, su, piu-su)
+//   zoom-su.jpg («Col titolo» col telefono più grande che esce in basso: la scelta di Max del 24/11),
+//   carattere-*.jpg (la stessa con altri caratteri per la scritta: pixel, ottanta, neon, firma, pulito)
 //   e i pezzi: sfondo.jpg (la scena senza scritte), schermo-*.png (le schermate) e finestra-*.png (le finestre dei lavori)
 import { chromium } from 'playwright';
 import sharp from 'sharp';
@@ -19,18 +20,41 @@ const indirizzo = url + (url.includes('?') ? '&' : '?') + 'gl=forza';
 const dentro = n => path.join(cartella, n);
 const uri = (file, tipo) => `data:${tipo};base64,${readFileSync(file).toString('base64')}`;
 const f = n => uri(path.join(radice, 'fonts', n), 'font/woff2');
+// caratteri usati solo nelle foto, non nel sito (liberi, licenza OFL accanto): strumenti/caratteri/
+const car = n => uri(path.join(radice, 'strumenti', 'caratteri', n), 'font/woff2');
 const browser = await chromium.launch();
 const senzaAvvio = ctx => ctx.addInitScript(() => { sessionStorage.setItem('booted', '1'); sessionStorage.setItem('dlg', '1'); });
 
 // 1. lo sfondo: la scena 3D del sito (cielo, sole, griglia, oggetti cromati) senza finestre né scritte.
-//    Si fotografa quadrata e si taglia al centro: con la pagina quadrata gli oggetti cromati stanno ai lati, non tagliati in fondo
+//    Si fotografa quadrata e si taglia al centro: con la pagina quadrata gli oggetti cromati stanno ai lati, non tagliati in fondo.
+//    Nella foto le forme ai lati sono allineate (Max, 24/11): icosaedro e nodo alla stessa altezza e alla stessa distanza
+//    dai bordi, e le palme uguali (quella di destra è lo specchio di quella di sinistra). Il sito resta com'è.
 {
   const ctx = await browser.newContext({ viewport: { width: 1350, height: 1350 }, locale: 'it-IT' });
   await senzaAvvio(ctx);
+  // segna gli oggetti che la scena aggiunge, per poterli spostare dopo (nel sito sono variabili chiuse)
+  await ctx.addInitScript(() => addEventListener('DOMContentLoaded', () => {
+    if (!window.THREE) return;
+    const aggiungi = THREE.Object3D.prototype.add;
+    THREE.Object3D.prototype.add = function (...o) { (window.__oggetti ||= []).push(...o); return aggiungi.apply(this, o); };
+  }));
   const p = await ctx.newPage();
   await p.goto(indirizzo, { waitUntil: 'networkidle' });
   await p.addStyleTag({ content: 'body>*:not(#scene){visibility:hidden!important}' });
   await p.waitForTimeout(4000);
+  const allineate = await p.evaluate(() => {
+    const trova = tipo => (window.__oggetti || []).find(o => o.geometry && o.geometry.type === tipo);
+    const nodo = trova('TorusKnotGeometry'), ico = trova('IcosahedronGeometry');
+    if (!nodo || !ico) return false;
+    const x = (nodo.position.x - ico.position.x) / 2, y = (nodo.position.y + ico.position.y) / 2;
+    nodo.position.set(x, y, 0); ico.position.set(-x, y, 0);
+    const c = document.getElementById('fg'), g = c.getContext('2d'), W = c.width, H = c.height, copia = document.createElement('canvas');
+    copia.width = W; copia.height = H; copia.getContext('2d').drawImage(c, 0, 0);
+    g.clearRect(W / 2, 0, W / 2, H); g.save(); g.translate(W, 0); g.scale(-1, 1); g.drawImage(copia, 0, 0, W / 2, H, 0, 0, W / 2, H); g.restore();
+    return true;
+  });
+  if (!allineate) console.error('attenzione: forme dello sfondo non trovate, restano come nel sito');
+  await p.waitForTimeout(300);
   await p.screenshot({ path: dentro('sfondo.jpg'), type: 'jpeg', quality: 92, clip: { x: 135, y: 0, width: 1080, height: 1350 } });
   await ctx.close();
 }
@@ -109,6 +133,9 @@ const telefono = nome => `<div class="tel"><div class="vetro">
 const css = `
 @font-face{font-family:P;font-style:italic;font-weight:800;src:url(${f('playfair-display-800i-latin.woff2')}) format("woff2")}
 @font-face{font-family:V;src:url(${f('vt323-latin.woff2')}) format("woff2")}
+@font-face{font-family:Neon;src:url(${car('monoton.woff2')}) format("woff2")}
+@font-face{font-family:Firma;src:url(${car('kaushan-script.woff2')}) format("woff2")}
+@font-face{font-family:Ottanta;src:local("Futura-CondensedExtraBold"),local("Futura Condensed ExtraBold")}
 html,body{margin:0;width:1080px;height:1350px;overflow:hidden;background:#140536}
 body{position:relative;font-family:-apple-system,"SF Pro Text","Helvetica Neue",sans-serif}
 .sfondo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -127,9 +154,22 @@ body{position:relative;font-family:-apple-system,"SF Pro Text","Helvetica Neue",
 .pillola{margin:9px 12px 0;height:44px;border-radius:13px;background:rgba(255,255,255,.13);display:flex;align-items:center;justify-content:space-between;padding:0 14px;color:#fff;font-size:17px}
 .pillola span{opacity:.75;font-size:16px}.pillola b{font-weight:500}
 .safari i{position:absolute;left:50%;bottom:8px;width:134px;height:5px;margin-left:-67px;border-radius:3px;background:#fff}
-h1{position:absolute;left:0;right:0;top:70px;margin:0;text-align:center;font:italic 800 92px/1.02 P;letter-spacing:-.02em;
+h1{position:absolute;left:0;right:0;top:70px;margin:0;text-align:center;white-space:nowrap;font:italic 800 92px/1.02 P;letter-spacing:-.02em;
   background:linear-gradient(180deg,#fff 0%,#e8ebff 30%,#8a94c8 48%,#fff 52%,#ffd4f1 70%,#fff 100%);-webkit-background-clip:text;color:transparent;
   filter:drop-shadow(0 0 18px rgba(255,95,193,.55)) drop-shadow(5px 6px 0 #2b1680)}
+/* altri caratteri per la scritta (Max, 24/11: «proviamo altro font?»); la grandezza la sistema adatta() perché stia in 960 px */
+h1.pixel{font:400 128px/.92 V;letter-spacing:0;background:none;color:#effdff;filter:none;
+  text-shadow:0 0 10px #45f0ff,0 0 28px rgba(69,240,255,.75),5px 5px 0 #ff5fc1,0 0 60px rgba(255,95,193,.5)}
+h1.ottanta{font:400 118px/.98 Ottanta;text-transform:uppercase;letter-spacing:.01em;transform:skewX(-9deg);
+  background:linear-gradient(180deg,#0b1d5c 0%,#2f74e0 34%,#dff3ff 49%,#2a0f45 51%,#b5407a 66%,#ffb347 84%,#fff4cc 100%) 0 0/100% 1lh repeat-y;-webkit-background-clip:text;color:transparent;
+  -webkit-text-stroke:1.5px rgba(255,255,255,.85);filter:drop-shadow(0 0 16px rgba(255,95,193,.6)) drop-shadow(4px 5px 0 #2b1680)}
+h1.neon{font:400 76px/1.25 Neon;letter-spacing:.02em;background:none;color:#ffe3f6;filter:none;
+  text-shadow:0 0 6px #fff,0 0 14px #ff5fc1,0 0 30px #ff5fc1,0 0 60px rgba(255,95,193,.8)}
+h1.firma{font:400 104px/1.05 Firma;letter-spacing:0;
+  background:linear-gradient(180deg,#fff 0%,#ffd4f1 40%,#ff5fc1 70%,#ff9a5a 100%);-webkit-background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 14px rgba(255,95,193,.7)) drop-shadow(4px 5px 0 #2b1680)}
+h1.pulito{font:900 96px/1.02 -apple-system,"SF Pro Display","Helvetica Neue",sans-serif;letter-spacing:-.035em;background:none;color:#fff;filter:none;
+  text-shadow:0 0 24px rgba(255,95,193,.65),0 4px 0 #2b1680}
 .dietro .tel{filter:brightness(.72) saturate(.9)}
 .pc{position:absolute}
 .coperchio{width:880px;height:572px;box-sizing:border-box;padding:18px 16px 24px;border-radius:24px 24px 6px 6px;position:relative;
@@ -146,7 +186,8 @@ const pagina = corpo => `<!doctype html><html><head><meta charset="utf-8"><style
 // un telefono al centro: k = scala, top = dove comincia
 const posto = (nome, k, top, dx = 0, classe = '') => `<div class="posto ${classe}" style="top:${top}px;transform:translateX(calc(-50% + ${dx}px)) scale(${k})">${telefono(nome)}</div>`;
 const alto = k => (H + 28) * k;
-const TITOLO = '<h1>Siti, app e strumenti<br>su misura.</h1>';
+const titolo = (stile = '') => `<h1 class="${stile}">Siti, app e strumenti<br>su misura.</h1>`;
+const TITOLO = titolo();
 // una finestra dei lavori: left, top, larghezza; restituisce anche dove finisce
 const fin = (id, x, y, w) => `<div class="fin" style="left:${x}px;top:${y}px;width:${w}px"><img src="${uri(dentro(`finestra-${id}.png`), 'image/png')}"></div>`;
 const fondo = (id, y, w) => y + w * alteFinestre[id];
@@ -177,16 +218,26 @@ const foto = {
   telefono: pagina(posto('sito', 1.2, (1350 - alto(1.2)) / 2)),
   titolo: pagina(`<h1>Siti, app e strumenti<br>su misura.</h1>${posto('sito', .98, 1350 - alto(.98) - 40)}`),
   // «Col titolo» col telefono più vicino (Max, 24/11: «il cellulare dovrebbe essere più zoommato»): più grande, esce dal bordo in basso.
-  // Max ha scelto la scala 1,75 («Ancora più vicino»), poi «un po' più su, c'è troppa aria»: tre altezze da confrontare
-  'zoom-ancora': pagina(TITOLO + posto('sito', 1.75, 430)),
+  // Max ha scelto la scala 1,75 («Ancora più vicino»), poi «un po' più su, c'è troppa aria»: tra tre altezze ha scelto «Più su» (top 365)
   'zoom-su': pagina(TITOLO + posto('sito', 1.75, 365)),
-  'zoom-piu-su': pagina(TITOLO + posto('sito', 1.75, 305)),
+  // la stessa foto con altri caratteri per la scritta
+  ...Object.fromEntries(['pixel', 'ottanta', 'neon', 'firma', 'pulito'].map(s => [`carattere-${s}`, pagina(titolo(s) + posto('sito', 1.75, 365))])),
   tre: pagina(posto('finestre', .9, (1350 - alto(.9)) / 2, -318, 'dietro') + posto('contatti', .9, (1350 - alto(.9)) / 2, 318, 'dietro') + posto('sito', 1.08, (1350 - alto(1.08)) / 2)),
 };
 const p = await browser.newPage({ viewport: { width: 1080, height: 1350 } });
 for (const [nome, html] of Object.entries(foto)) {
   await p.setContent(html, { waitUntil: 'load' });
-  await p.evaluate(async () => { await document.fonts.load('italic 800 100px P'); await document.fonts.ready; });
+  await p.evaluate(async () => {
+    await Promise.allSettled([...document.fonts].map(c => c.load()));
+    await document.fonts.ready;
+    // la riga più lunga della scritta sta in 960 px: se esce, il carattere si rimpicciolisce
+    const h = document.querySelector('h1');
+    if (h) {
+      const r = document.createRange(); r.selectNodeContents(h);
+      const largo = Math.max(...[...r.getClientRects()].map(x => x.width));
+      if (largo > 960) h.style.fontSize = parseFloat(getComputedStyle(h).fontSize) * 960 / largo + 'px';
+    }
+  });
   await p.waitForTimeout(200);
   await p.screenshot({ path: dentro(`${nome}.jpg`), type: 'jpeg', quality: 92 });
   console.log('fatto:', dentro(`${nome}.jpg`));
