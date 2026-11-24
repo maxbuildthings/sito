@@ -3,7 +3,7 @@
 //   fa: telefono.jpg (un telefono grande), titolo.jpg (il titolo sopra, il telefono sotto), tre.jpg (tre telefoni: sito, finestre, contatti),
 //   computer.jpg (il portatile col sito da computer e il telefono davanti), lavori.jpg (le cinque finestre e una sesta «in cantiere», due per riga),
 //   finestre.jpg (il telefono al centro e quattro lavori ai lati),
-//   zoom-*.jpg («Col titolo» col telefono più grande: intero, vicino, ancora più vicino, primo piano)
+//   zoom-*.jpg («Col titolo» col telefono più grande che esce in basso, a tre altezze: ancora, su, piu-su)
 //   e i pezzi: sfondo.jpg (la scena senza scritte), schermo-*.png (le schermate) e finestra-*.png (le finestre dei lavori)
 import { chromium } from 'playwright';
 import sharp from 'sharp';
@@ -176,11 +176,11 @@ const foto = {
   finestre: pagina(traFinestre),
   telefono: pagina(posto('sito', 1.2, (1350 - alto(1.2)) / 2)),
   titolo: pagina(`<h1>Siti, app e strumenti<br>su misura.</h1>${posto('sito', .98, 1350 - alto(.98) - 40)}`),
-  // «Col titolo» col telefono più vicino (Max, 24/11: «il cellulare dovrebbe essere più zoommato»): più grande, esce dal bordo in basso
-  'zoom-intero': pagina(TITOLO + posto('sito', 1.22, 1350 - alto(1.22) - 8)),
-  'zoom-vicino': pagina(TITOLO + posto('sito', 1.4, 440)),
+  // «Col titolo» col telefono più vicino (Max, 24/11: «il cellulare dovrebbe essere più zoommato»): più grande, esce dal bordo in basso.
+  // Max ha scelto la scala 1,75 («Ancora più vicino»), poi «un po' più su, c'è troppa aria»: tre altezze da confrontare
   'zoom-ancora': pagina(TITOLO + posto('sito', 1.75, 430)),
-  'zoom-primo-piano': pagina(TITOLO + posto('sito', 2.25, 400)),
+  'zoom-su': pagina(TITOLO + posto('sito', 1.75, 365)),
+  'zoom-piu-su': pagina(TITOLO + posto('sito', 1.75, 305)),
   tre: pagina(posto('finestre', .9, (1350 - alto(.9)) / 2, -318, 'dietro') + posto('contatti', .9, (1350 - alto(.9)) / 2, 318, 'dietro') + posto('sito', 1.08, (1350 - alto(1.08)) / 2)),
 };
 const p = await browser.newPage({ viewport: { width: 1080, height: 1350 } });
