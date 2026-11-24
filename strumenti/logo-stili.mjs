@@ -178,6 +178,56 @@ body{background:linear-gradient(160deg,#3a0ca3 0%,${NOTTE} 70%)}
      ${soleCorre(620, 450, 280, 'd4')}`,
     SOLE + ALONE + crescono.map(([, y, r], i) => strisce('b' + i, y, r)).join('') + strisce('d4', 450, 280)),
 
+  // --- terzo giro del Dinamismo (24/11): Max sceglie tra «Più pulito» e «Che sorge», «ma manca ancora qualcosa» ---
+  // ogni variante aggiunge una cosa sola: il mondo del sito, la luce, l'energia, il nome
+  // Sull'orizzonte: «Che sorge» che esce dalla griglia al neon del sito, come nella scena 3D
+  'dinamismo-orizzonte': `<style>${base}</style>` + svg(
+    `<rect width="1080" height="1080" fill="url(#tramonto)"/>
+     <g clip-path="url(#sopra)">${stelle(16, 9)}
+       <ellipse cx="540" cy="800" rx="520" ry="200" fill="${ROSA}" opacity=".35" filter="url(#alone)"/>
+       <g mask="url(#fo)">${[[540, CIANO], [480, '#6f5cff'], [420, '#c13cf0']].map(([y, c]) => `<circle cx="540" cy="${y}" r="270" fill="${c}"/>`).join('')}</g>
+       ${soleCorre(540, 360, 270, 'd5')}</g>
+     <rect y="800" width="1080" height="280" fill="url(#suolo)"/>
+     <g clip-path="url(#sotto)" stroke="${CIANO}" filter="url(#neon)">
+       ${Array.from({ length: 15 }, (_, i) => i - 7).map(k => `<line x1="${540 + k * 40}" y1="800" x2="${540 + k * 210}" y2="1080" stroke-width="3" opacity=".7"/>`).join('')}
+       ${[808, 822, 842, 870, 908, 958, 1022].map((y, i) => `<line x1="0" x2="1080" y1="${y}" y2="${y}" stroke-width="${2 + i * .5}" opacity="${.35 + i * .09}"/>`).join('')}
+     </g>
+     <rect y="797" width="1080" height="6" fill="#ffd1ec" filter="url(#neon)"/>`,
+    SOLE + ALONE + NEON + strisce('d5', 360, 270) + fuori('fo', 540, 360, 270) +
+    `<linearGradient id="tramonto" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b0220"/><stop offset=".45" stop-color="#1d0750"/><stop offset=".74" stop-color="#5a1580"/></linearGradient>
+     <linearGradient id="suolo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a0a5e"/><stop offset="1" stop-color="#0b0220"/></linearGradient>
+     <clipPath id="sopra"><rect width="1080" height="800"/></clipPath><clipPath id="sotto"><rect y="800" width="1080" height="280"/></clipPath>`),
+
+  // Più pulito, acceso: la corsa in diagonale coi colori di «Che sorge», ogni eco sfumato dal buio al colore, col bordo di luce
+  'dinamismo-acceso': `<style>${base}</style>` + svg(
+    `<rect width="1080" height="1080" fill="url(#cielo)"/>${stelle(14, 5)}
+     <g mask="url(#fa)">${[[400, 670, CIANO], [470, 600, '#6f5cff'], [540, 530, '#c13cf0']].map(([x, y, c], i) => `<circle cx="${x}" cy="${y}" r="260" fill="url(#ea${i})" stroke="${mescola(c, '#ffffff', .55)}" stroke-width="4"/>`).join('')}</g>
+     ${soleCorre(610, 460, 260, 'd6')}`,
+    SOLE + CIELO + ALONE + strisce('d6', 460, 260) + fuori('fa', 610, 460, 260) +
+    [CIANO, '#6f5cff', '#c13cf0'].map((c, i) => `<linearGradient id="ea${i}" x1="0" y1="1" x2="1" y2="0"><stop offset=".2" stop-color="${mescola(c, NOTTE, .72)}"/><stop offset=".8" stop-color="${c}"/></linearGradient>`).join('')),
+
+  // Con le scie: «Che sorge» con le linee di velocità sotto, l'energia del primo Dinamismo senza le fasce
+  'dinamismo-scie': `<style>${base}</style>` + svg(
+    `<rect width="1080" height="1080" fill="url(#cielo)"/>${stelle(14, 9)}
+     <g filter="url(#neon)">${[-4, -3, -2, -1, 0, 1, 2, 3, 4].map(k => {
+       // ogni scia parte da sotto l'eco ciano e si spegne verso il basso
+       const x = 540 + k * 58, giu = 640 + Math.sqrt(290 * 290 - (k * 58) ** 2), l = [90, 170, 130, 210, 150, 210, 130, 170, 90][k + 4], w = k % 2 ? 7 : 10;
+       return `<rect x="${x - w / 2}" y="${(giu - 60).toFixed(0)}" width="${w}" height="${(l + 60).toFixed(0)}" rx="${w / 2}" fill="url(#${k % 2 ? 'sc' : 'sb'})"/>`; }).join('')}</g>
+     <g mask="url(#fz)">${[[640, CIANO], [565, '#6f5cff'], [492, '#c13cf0']].map(([y, c]) => `<circle cx="540" cy="${y}" r="290" fill="${c}"/>`).join('')}</g>
+     ${soleCorre(540, 420, 290, 'd7')}`,
+    SOLE + CIELO + ALONE + NEON + strisce('d7', 420, 290) + fuori('fz', 540, 420, 290) +
+    [['sb', '#ffffff'], ['sc', CIANO]].map(([id, c]) => `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset=".25" stop-color="${c}" stop-opacity=".9"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></linearGradient>`).join('')),
+
+  // Con la M: «Che sorge» con la M cromata del titolo del sito davanti agli echi
+  'dinamismo-m': `<style>${base}
+.m{position:absolute;left:0;right:0;top:470px;text-align:center;font:italic 800 440px/1 P;letter-spacing:-.02em;padding-right:30px;
+background:linear-gradient(180deg,#fff 0%,#e8ebff 30%,#8a94c8 48%,#fff 52%,#ffd4f1 70%,#fff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+filter:drop-shadow(0 0 22px rgba(255,95,193,.6)) drop-shadow(12px 14px 0 #2b1680)}</style>` + svg(
+    `<rect width="1080" height="1080" fill="url(#cielo)"/>${stelle(14, 9)}
+     <g mask="url(#fm)">${[[640, CIANO], [565, '#6f5cff'], [492, '#c13cf0']].map(([y, c]) => `<circle cx="540" cy="${y}" r="290" fill="${c}"/>`).join('')}</g>
+     ${soleCorre(540, 420, 290, 'd8')}`,
+    SOLE + CIELO + ALONE + strisce('d8', 420, 290) + fuori('fm', 540, 420, 290)) + `<div class="m">M</div>`,
+
   // Fantascienza anni '80: il sole diventato una sfera cromata che riflette il tramonto e la griglia
   cromo: `<style>${base}</style>` + svg(
     `<rect width="1080" height="1080" fill="url(#cielo)"/>${stelle(18, 11)}
