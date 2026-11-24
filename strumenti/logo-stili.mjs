@@ -62,6 +62,13 @@ const tacche = Array.from({ length: 72 }, (_, i) => { const a = i * 5 * Math.PI 
 const arco = (r, da, a, colore, w) => { const p = g => [540 + r * Math.cos(g * Math.PI / 180), 540 + r * Math.sin(g * Math.PI / 180)].map(v => v.toFixed(1)).join(' ');
   return `<path d="M${p(da)} A${r} ${r} 0 ${a - da > 180 ? 1 : 0} 1 ${p(a)}" stroke="${colore}" stroke-width="${w}" fill="none" stroke-linecap="round"/>`; };
 const profilo = readFileSync(path.join(radice, 'promo/instagram/profilo.svg'), 'utf8');
+// Dinamismo, varianti (24/11): gli «echi» del sole stanno dietro, e dentro le strisce del sole si vede il cielo, non l'eco
+const fuori = (id, cx, cy, r) => `<mask id="${id}" maskUnits="userSpaceOnUse" x="0" y="0" width="1080" height="1080"><rect width="1080" height="1080" fill="#fff"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="#000"/></mask>`;
+const soleCorre = (cx, cy, r, id) => `<circle cx="${cx}" cy="${cy}" r="${r + 20}" fill="${ROSA}" opacity=".45" filter="url(#alone)"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#sg)" mask="url(#${id})"/>`;
+// Balla, «Velocità astratta»: i soli crescono lungo la curva, trasparenti uno nell'altro, e le linee-forza a cuneo partono dall'angolo
+const crescono = [[250, 820, 110, '#45f0ff'], [322, 718, 150, '#6f8cff'], [410, 622, 192, '#9b5cff'], [510, 532, 236, '#c13cf0']];
+const cunei = [-62, -55, -48, -41, -34, -27].map((g, i) => { const p = a => `${(-150 + 2200 * Math.cos(a * Math.PI / 180)).toFixed(0)},${(1250 + 2200 * Math.sin(a * Math.PI / 180)).toFixed(0)}`;
+  return `<polygon points="-150,1250 ${p(g)} ${p(g + 3.2)}" fill="${['#2a0a6b', '#3a0ca3', '#5a1aa0'][i % 3]}" opacity=".75"/>`; }).join('');
 
 const STILI = {
   // la finestra Windows 98 del sito, con la M dentro
@@ -141,6 +148,35 @@ body{background:linear-gradient(160deg,#3a0ca3 0%,${NOTTE} 70%)}
      <circle cx="580" cy="470" r="270" fill="${ROSA}" opacity=".5" filter="url(#alone)"/>
      <circle cx="580" cy="470" r="270" fill="url(#sg)" mask="url(#c9)"/>`,
     SOLE + ALONE + corsa.map(([, cy, r], i) => strisce('c' + i, cy, r)).join('') + strisce('c9', 470, 270)),
+
+  // Dinamismo più pulito: niente fasce e niente scie, solo tre echi pieni dietro il sole, dal buio al viola
+  'dinamismo-pulito': `<style>${base}</style>` + svg(
+    `<rect width="1080" height="1080" fill="url(#cielo)"/>${stelle(14, 5)}
+     <g mask="url(#fp)">${[[400, 670, '#2a1470'], [470, 600, '#5b2bbf'], [540, 530, '#a83ad8']].map(([x, y, c]) => `<circle cx="${x}" cy="${y}" r="260" fill="${c}"/>`).join('')}</g>
+     ${soleCorre(610, 460, 260, 'd1')}`,
+    SOLE + CIELO + ALONE + strisce('d1', 460, 260) + fuori('fp', 610, 460, 260)),
+
+  // Dinamismo che sorge: il sole sale dritto, gli echi restano sotto a spicchi (ciano in fondo); centrato, regge il cerchio
+  'dinamismo-sorge': `<style>${base}</style>` + svg(
+    `<rect width="1080" height="1080" fill="url(#cielo)"/>${stelle(14, 9)}
+     <g mask="url(#fs)">${[[640, CIANO], [565, '#6f5cff'], [492, '#c13cf0']].map(([y, c]) => `<circle cx="540" cy="${y}" r="290" fill="${c}"/>`).join('')}</g>
+     ${soleCorre(540, 420, 290, 'd2')}`,
+    SOLE + CIELO + ALONE + strisce('d2', 420, 290) + fuori('fs', 540, 420, 290)),
+
+  // Dinamismo al neon: gli echi sono anelli luminosi, dal rosa al ciano, sempre più deboli
+  'dinamismo-neon': `<style>${base}</style>` + svg(
+    `<rect width="1080" height="1080" fill="url(#cielo)"/>${stelle(14, 13)}
+     <g mask="url(#fn)" fill="none" filter="url(#neon)">${[[390, 680, CIANO, .4], [460, 610, '#9b5cff', .65], [530, 540, ROSA, .9]].map(([x, y, c, o]) => `<circle cx="${x}" cy="${y}" r="260" stroke="${c}" stroke-width="9" opacity="${o}"/>`).join('')}</g>
+     ${soleCorre(605, 465, 260, 'd3')}`,
+    SOLE + CIELO + ALONE + NEON + strisce('d3', 465, 260) + fuori('fn', 605, 465, 260)),
+
+  // Dinamismo più Balla: i soli crescono lungo la curva, trasparenti uno nell'altro, coi cunei delle linee-forza
+  'dinamismo-balla': `<style>${base}</style>` + svg(
+    `<rect width="1080" height="1080" fill="${NOTTE}"/>${cunei}
+     ${[0, 1, 2].map(i => `<path d="M${120 + i * 60} ${960 - i * 10} Q ${300 + i * 40} ${560 - i * 30} ${720 + i * 20} ${300 - i * 40}" stroke="#fff" stroke-width="${5 - i}" fill="none" stroke-linecap="round" opacity=".3"/>`).join('')}
+     <g style="mix-blend-mode:screen">${crescono.map(([x, y, r, c], i) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${c}" opacity=".55" mask="url(#b${i})"/>`).join('')}</g>
+     ${soleCorre(620, 450, 280, 'd4')}`,
+    SOLE + ALONE + crescono.map(([, y, r], i) => strisce('b' + i, y, r)).join('') + strisce('d4', 450, 280)),
 
   // Fantascienza anni '80: il sole diventato una sfera cromata che riflette il tramonto e la griglia
   cromo: `<style>${base}</style>` + svg(
