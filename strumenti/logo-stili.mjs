@@ -69,6 +69,17 @@ const soleCorre = (cx, cy, r, id) => `<circle cx="${cx}" cy="${cy}" r="${r + 20}
 const crescono = [[250, 820, 110, '#45f0ff'], [322, 718, 150, '#6f8cff'], [410, 622, 192, '#9b5cff'], [510, 532, 236, '#c13cf0']];
 const cunei = [-62, -55, -48, -41, -34, -27].map((g, i) => { const p = a => `${(-150 + 2200 * Math.cos(a * Math.PI / 180)).toFixed(0)},${(1250 + 2200 * Math.sin(a * Math.PI / 180)).toFixed(0)}`;
   return `<polygon points="-150,1250 ${p(g)} ${p(g + 3.2)}" fill="${['#2a0a6b', '#3a0ca3', '#5a1aa0'][i % 3]}" opacity=".75"/>`; }).join('');
+// Echi accesi (come «Acceso»): ogni eco è pieno, sfumato dal buio al suo colore, col bordo di luce; sta dietro il sole
+const eco = (cx, cy, r, c, grad) => `<circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#${grad})" stroke="${mescola(c, '#ffffff', .55)}" stroke-width="4"/>`;
+// sfumatura verticale (buio in y1, colore in y2) e circolare (buio fino a «da», colore sul bordo)
+const vert = (id, c, y1, y2) => `<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" y1="${y1}" x2="0" y2="${y2}"><stop offset="0" stop-color="${mescola(c, NOTTE, .72)}"/><stop offset="1" stop-color="${c}"/></linearGradient>`;
+const rad = (id, c, da) => `<radialGradient id="${id}"><stop offset="${da}" stop-color="${mescola(c, NOTTE, .72)}"/><stop offset="1" stop-color="${c}"/></radialGradient>`;
+// echi [cx, cy, r, colore] dal più lontano al più vicino, sole [cx, cy, r]; le sfumature si chiamano e<id>0, e<id>1…
+const accesi = (id, echi, [sx, sy, sr], { defs = '', seme = 9 } = {}) => `<style>${base}</style>` + svg(
+  `<rect width="1080" height="1080" fill="url(#cielo)"/>${stelle(14, seme)}
+   <g mask="url(#f${id})">${echi.map(([x, y, r, c], i) => eco(x, y, r, c, `e${id}${i}`)).join('')}</g>
+   ${soleCorre(sx, sy, sr, 's' + id)}`,
+  SOLE + CIELO + ALONE + strisce('s' + id, sy, sr) + fuori('f' + id, sx, sy, sr) + defs);
 
 const STILI = {
   // la finestra Windows 98 del sito, con la M dentro
@@ -227,6 +238,43 @@ filter:drop-shadow(0 0 22px rgba(255,95,193,.6)) drop-shadow(12px 14px 0 #2b1680
      <g mask="url(#fm)">${[[640, CIANO], [565, '#6f5cff'], [492, '#c13cf0']].map(([y, c]) => `<circle cx="540" cy="${y}" r="290" fill="${c}"/>`).join('')}</g>
      ${soleCorre(540, 420, 290, 'd8')}`,
     SOLE + CIELO + ALONE + strisce('d8', 420, 290) + fuori('fm', 540, 420, 290)) + `<div class="m">M</div>`,
+
+  // --- quarto giro (24/11): a Max piace «Acceso», ma non la corsa in diagonale né il sole fuori centro: tutto dritto e centrato ---
+  // Acceso dritto: la geometria di «Che sorge» (il sole sale, gli echi restano sotto) con gli echi accesi
+  'acceso-dritto': accesi('a', [[540, 640, 290, CIANO], [540, 565, 290, '#6f5cff'], [540, 492, 290, '#c13cf0']], [540, 420, 290],
+    { defs: [[CIANO, 930], ['#6f5cff', 855], ['#c13cf0', 782]].map(([c, y], i) => vert('ea' + i, c, y, y - 150)).join('') }),
+
+  // Acceso fitto: cinque echi stretti sotto il sole, dal ciano al magenta, come una scia dritta
+  'acceso-fitto': accesi('b', ['#45f0ff', '#5aa8ff', '#6f5cff', '#9b5cff', '#c13cf0'].map((c, i) => [540, 640 - i * 44, 280, c]), [540, 420, 280],
+    { defs: ['#45f0ff', '#5aa8ff', '#6f5cff', '#9b5cff', '#c13cf0'].map((c, i) => vert('eb' + i, c, 920 - i * 44, 920 - i * 44 - 90)).join('') }),
+
+  // Acceso ad alone: gli echi diventano anelli intorno al sole, ognuno dal buio al suo colore
+  'acceso-alone': accesi('c', [[540, 540, 455, CIANO], [540, 540, 385, '#6f5cff'], [540, 540, 315, '#c13cf0']], [540, 540, 245],
+    { defs: [[CIANO, .846], ['#6f5cff', .818], ['#c13cf0', .778]].map(([c, d], i) => rad('ec' + i, c, d)).join('') }),
+
+  // Acceso a nido: gli echi toccano tutti lo stesso punto in basso e si allargano verso l'alto, il sole sorge da lì
+  // (i fondi scalano di 12 px, così i bordi di luce non si ammucchiano in un punto solo)
+  'acceso-nido': accesi('d', [[540, 526, 460, CIANO], [540, 584, 390, '#6f5cff'], [540, 642, 320, '#c13cf0']], [540, 700, 250],
+    { defs: [[CIANO, .72], ['#6f5cff', .67], ['#c13cf0', .6]].map(([c, d], i) => rad('ed' + i, c, d)).join('') }),
+
+  // Acceso sull'orizzonte: «Sull'orizzonte» con gli echi accesi
+  'acceso-orizzonte': `<style>${base}</style>` + svg(
+    `<rect width="1080" height="1080" fill="url(#tramonto)"/>
+     <g clip-path="url(#sopra)">${stelle(16, 9)}
+       <ellipse cx="540" cy="800" rx="520" ry="200" fill="${ROSA}" opacity=".35" filter="url(#alone)"/>
+       <g mask="url(#fe)">${[[540, CIANO], [480, '#6f5cff'], [420, '#c13cf0']].map(([y, c], i) => eco(540, y, 270, c, 'ee' + i)).join('')}</g>
+       ${soleCorre(540, 360, 270, 'se')}</g>
+     <rect y="800" width="1080" height="280" fill="url(#suolo)"/>
+     <g clip-path="url(#sotto)" stroke="${CIANO}" filter="url(#neon)">
+       ${Array.from({ length: 15 }, (_, i) => i - 7).map(k => `<line x1="${540 + k * 40}" y1="800" x2="${540 + k * 210}" y2="1080" stroke-width="3" opacity=".7"/>`).join('')}
+       ${[808, 822, 842, 870, 908, 958, 1022].map((y, i) => `<line x1="0" x2="1080" y1="${y}" y2="${y}" stroke-width="${2 + i * .5}" opacity="${.35 + i * .09}"/>`).join('')}
+     </g>
+     <rect y="797" width="1080" height="6" fill="#ffd1ec" filter="url(#neon)"/>`,
+    SOLE + ALONE + NEON + strisce('se', 360, 270) + fuori('fe', 540, 360, 270) +
+    [[CIANO, 810], ['#6f5cff', 750], ['#c13cf0', 690]].map(([c, y], i) => vert('ee' + i, c, y, y - 150)).join('') +
+    `<linearGradient id="tramonto" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b0220"/><stop offset=".45" stop-color="#1d0750"/><stop offset=".74" stop-color="#5a1580"/></linearGradient>
+     <linearGradient id="suolo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a0a5e"/><stop offset="1" stop-color="#0b0220"/></linearGradient>
+     <clipPath id="sopra"><rect width="1080" height="800"/></clipPath><clipPath id="sotto"><rect y="800" width="1080" height="280"/></clipPath>`),
 
   // Fantascienza anni '80: il sole diventato una sfera cromata che riflette il tramonto e la griglia
   cromo: `<style>${base}</style>` + svg(
