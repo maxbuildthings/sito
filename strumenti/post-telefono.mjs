@@ -1,8 +1,11 @@
 // Foto per i post (4:5, 1080×1350): il sito dentro un telefono, davanti alla scena 3D del sito. Tutto dritto e centrato.
 // Uso: node strumenti/post-telefono.mjs <cartella-uscita> [url]
-//   fa: telefono.jpg (un telefono grande), titolo.jpg (il titolo sopra, il telefono sotto), tre.jpg (tre telefoni: sito, finestre, contatti)
-//   e i pezzi: sfondo.jpg (la scena senza scritte) e schermo-*.png (le tre schermate del telefono)
+//   fa: telefono.jpg (un telefono grande), titolo.jpg (il titolo sopra, il telefono sotto), tre.jpg (tre telefoni: sito, finestre, contatti),
+//   computer.jpg (il portatile col sito da computer e il telefono davanti), lavori.jpg (le cinque finestre e una sesta «in cantiere», due per riga),
+//   finestre.jpg (il telefono al centro e quattro lavori ai lati)
+//   e i pezzi: sfondo.jpg (la scena senza scritte), schermo-*.png (le schermate) e finestra-*.png (le finestre dei lavori)
 import { chromium } from 'playwright';
+import sharp from 'sharp';
 import { fileURLToPath } from 'node:url';
 import { mkdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -51,6 +54,49 @@ const schermate = { sito: null, finestre: '#pibreria', contatti: '#contatti' };
   await ctx.close();
 }
 
+// 2b. il sito dal computer: la parte alta (lo schermo del portatile) e le finestre dei lavori, una per una (dalla barra al nome)
+const finestre = ['pibreria', 'cantkeep', 'lamora', 'dovesonoinostrisoldi', 'pezzanera'];
+{
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2, locale: 'it-IT' });
+  await senzaAvvio(ctx);
+  const p = await ctx.newPage();
+  await p.goto(indirizzo, { waitUntil: 'networkidle' });
+  await p.waitForTimeout(4000);
+  await p.screenshot({ path: dentro('schermo-computer.png') });
+  for (const id of finestre) {
+    const w = p.locator('#' + id);
+    const taglio = await w.evaluate(e => (e.querySelector('h2').getBoundingClientRect().bottom + 14 - e.getBoundingClientRect().top) / e.getBoundingClientRect().width);
+    const png = await w.screenshot();
+    const { width } = await sharp(png).metadata();
+    await sharp(png).extract({ left: 0, top: 0, width, height: Math.round(width * taglio) }).toFile(dentro(`finestra-${id}.png`));
+  }
+  // la sesta finestra, quella dei lavori in cantiere: una copia vera di una finestra del sito, con dentro «in cantiere» e la barra che carica
+  await p.evaluate(() => {
+    const vera = document.querySelector('#cantkeep'), alta = vera.querySelector('.shot').getBoundingClientRect().height;
+    const w = vera.cloneNode(true);
+    w.id = 'cantiere';
+    w.querySelector('.ttl').innerHTML = 'in_cantiere<i>…</i>';
+    const s = w.querySelector('.shot');
+    s.style.cssText += `;height:${alta}px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:radial-gradient(ellipse at 50% 120%,#5b1a8c,#1d0750 55%,#0b0220)`;
+    s.innerHTML = `<div style="font:46px/1 var(--font-pixel);color:#45f0ff;text-shadow:0 0 12px rgba(69,240,255,.8)">altri progetti_</div>
+      <div style="width:62%;height:26px;padding:3px;box-sizing:border-box;background:#fff;box-shadow:inset 2px 2px #6d6688,inset -2px -2px #e8e4f7;display:flex;gap:3px">${'<span style="flex:1;background:#2b1680"></span>'.repeat(7)}${'<span style="flex:1"></span>'.repeat(4)}</div>
+      <div style="font:30px/1 var(--font-pixel);color:#ffe27a">arrivano presto</div>`;
+    w.querySelector('h2').textContent = 'E questo è solo l\'inizio';
+    document.querySelector('#pezzanera').after(w);
+  });
+  await p.waitForTimeout(500);
+  {
+    const w = p.locator('#cantiere');
+    const taglio = await w.evaluate(e => (e.querySelector('h2').getBoundingClientRect().bottom + 14 - e.getBoundingClientRect().top) / e.getBoundingClientRect().width);
+    const png = await w.screenshot();
+    const { width } = await sharp(png).metadata();
+    await sharp(png).extract({ left: 0, top: 0, width, height: Math.round(width * taglio) }).toFile(dentro('finestra-cantiere.png'));
+  }
+  await ctx.close();
+}
+finestre.push('cantiere');
+const alteFinestre = Object.fromEntries(await Promise.all(finestre.map(async id => { const m = await sharp(dentro(`finestra-${id}.png`)).metadata(); return [id, m.height / m.width]; })));
+
 // 3. il telefono: cornice, isola, barra in alto (ora, rete, batteria) e la barra di Safari con l'indirizzo
 const telefono = nome => `<div class="tel"><div class="vetro">
   <div class="stato"><b>9:41</b><span class="isola"></span><svg viewBox="0 0 70 14" width="70" height="14"><g fill="#fff"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/>
@@ -83,13 +129,50 @@ body{position:relative;font-family:-apple-system,"SF Pro Text","Helvetica Neue",
 h1{position:absolute;left:0;right:0;top:70px;margin:0;text-align:center;font:italic 800 92px/1.02 P;letter-spacing:-.02em;
   background:linear-gradient(180deg,#fff 0%,#e8ebff 30%,#8a94c8 48%,#fff 52%,#ffd4f1 70%,#fff 100%);-webkit-background-clip:text;color:transparent;
   filter:drop-shadow(0 0 18px rgba(255,95,193,.55)) drop-shadow(5px 6px 0 #2b1680)}
-.dietro .tel{filter:brightness(.72) saturate(.9)}`;
+.dietro .tel{filter:brightness(.72) saturate(.9)}
+.pc{position:absolute}
+.coperchio{width:880px;height:572px;box-sizing:border-box;padding:18px 16px 24px;border-radius:24px 24px 6px 6px;position:relative;
+  background:linear-gradient(135deg,#4a4560,#1b1826 30%,#0d0b14 70%,#3b3650);
+  box-shadow:0 0 0 2px #6d6688 inset,0 0 70px rgba(255,95,193,.5),0 0 140px rgba(69,240,255,.22)}
+.coperchio::before{content:"";position:absolute;left:50%;top:7px;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:#2a2638}
+.coperchio img{display:block;width:848px;height:530px;border-radius:4px}
+.base{position:relative;width:1010px;height:22px;margin-left:-65px;border-radius:2px 2px 18px 18px;background:linear-gradient(180deg,#6d6688,#2a2638 60%,#141220);box-shadow:0 30px 60px rgba(0,0,0,.6)}
+.base::before{content:"";position:absolute;left:50%;top:0;width:150px;height:8px;margin-left:-75px;border-radius:0 0 8px 8px;background:#1b1826}
+.fin{position:absolute;border-radius:9px;overflow:hidden;box-shadow:0 0 0 2px rgba(255,255,255,.35),0 0 40px rgba(255,95,193,.35),0 24px 50px rgba(0,0,0,.55)}
+.fin img{display:block;width:100%}`;
 const pagina = corpo => `<!doctype html><html><head><meta charset="utf-8"><style>${css}</style></head><body>
 <img class="sfondo" src="${uri(dentro('sfondo.jpg'), 'image/jpeg')}"><div class="velo"></div>${corpo}</body></html>`;
 // un telefono al centro: k = scala, top = dove comincia
 const posto = (nome, k, top, dx = 0, classe = '') => `<div class="posto ${classe}" style="top:${top}px;transform:translateX(calc(-50% + ${dx}px)) scale(${k})">${telefono(nome)}</div>`;
 const alto = k => (H + 28) * k;
+const TITOLO = '<h1>Siti, app e strumenti<br>su misura.</h1>';
+// una finestra dei lavori: left, top, larghezza; restituisce anche dove finisce
+const fin = (id, x, y, w) => `<div class="fin" style="left:${x}px;top:${y}px;width:${w}px"><img src="${uri(dentro(`finestra-${id}.png`), 'image/png')}"></div>`;
+const fondo = (id, y, w) => y + w * alteFinestre[id];
+// i cinque lavori e la sesta finestra «in cantiere», due per riga
+const lavori = (() => {
+  const w = 450, g = 20, x = [(1080 - 2 * w - g) / 2, (1080 + g) / 2];
+  let y = 292, html = TITOLO;
+  for (let r = 0; r < 3; r++) {
+    const riga = finestre.slice(r * 2, r * 2 + 2);
+    html += riga.map((id, i) => fin(id, x[i], y, w)).join('');
+    y = Math.max(...riga.map(id => fondo(id, y, w))) + g;
+  }
+  return html;
+})();
+// il telefono al centro e quattro lavori ai lati (dovesonoinostrisoldi non è ancora online)
+const traFinestre = (() => {
+  const w = 330, k = .9, top = 1350 - alto(k) - 40, ya = 400;
+  const yb = Math.max(fondo('pibreria', ya, w), fondo('lamora', ya, w)) + 28;
+  return TITOLO + fin('pibreria', 28, ya, w) + fin('cantkeep', 28, yb, w) + fin('lamora', 1080 - 28 - w, ya, w) + fin('pezzanera', 1080 - 28 - w, yb, w) + posto('sito', k, top);
+})();
+// il portatile col sito da computer e il telefono davanti, a destra
+const computer = TITOLO + `<div class="pc" style="left:100px;top:320px"><div class="coperchio"><img src="${uri(dentro('schermo-computer.png'), 'image/png')}"></div><div class="base"></div></div>`
+  + `<div class="posto" style="left:${1080 - 50 - (W + 28) * .55}px;top:${1350 - alto(.55) - 70}px;transform:scale(.55);transform-origin:0 0">${telefono('sito')}</div>`;
 const foto = {
+  computer: pagina(computer),
+  lavori: pagina(lavori),
+  finestre: pagina(traFinestre),
   telefono: pagina(posto('sito', 1.2, (1350 - alto(1.2)) / 2)),
   titolo: pagina(`<h1>Siti, app e strumenti<br>su misura.</h1>${posto('sito', .98, 1350 - alto(.98) - 40)}`),
   tre: pagina(posto('finestre', .9, (1350 - alto(.9)) / 2, -318, 'dietro') + posto('contatti', .9, (1350 - alto(.9)) / 2, 318, 'dietro') + posto('sito', 1.08, (1350 - alto(1.08)) / 2)),
